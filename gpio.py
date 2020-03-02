@@ -16,7 +16,7 @@ serversocket.bind((host, port))
 
 # queue up to 5 requests
 serversocket.listen(5)                                           
-
+print('host is listening, port = ', port, ' host = ', host)
 while True:
    # establish a connection
    clientsocket.addr = serversocket.accept()      
