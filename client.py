@@ -32,16 +32,18 @@ def request_data():
     print(time_cur)
 
     # Receive no more than 1024 bytes
-    #msg = s.recv(1024)
-    #print('Msg: ', msg)
+    msg = s.recv(1024)
+    print('Msg: ', msg)
     main_window_text_data_output.insert(tkinter.INSERT, '\n'+str(time_cur))
-    #print(msg.decode('ascii'))
+    print(msg.decode('ascii'))
     main_window.after(500, request_data)
 
 
-main_window.geometry("900x400")
+main_window.geometry("1024x600")
 
-main_window_btn_connect = tkinter.Button(main_window, text='Connect', command=connect_btn)
+main_window_btn_connect = tkinter.Button(main_window,
+                                        text='Connect', 
+                                        command=connect_btn)
 main_window_btn_connect.grid(row=0, column=0)
 
 main_window_lable_ip_connect = tkinter.Label(main_window, text='Connect to:')
