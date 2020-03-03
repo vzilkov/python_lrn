@@ -17,7 +17,6 @@ main_window = tkinter.Tk()
 def connect_btn():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     data_str = main_window_textbox_ip.get()
-    print('str data is: ', data_str)
 #host has standart IP
     s.connect((data_str, port))
     print('socket opened')
@@ -26,6 +25,18 @@ def connect_btn():
 def discon_btn():
     s.close()
     print('socket closed')
+
+
+def request_data():
+    time_cur = datetime.datetime.now()
+    print(time_cur)
+
+    # Receive no more than 1024 bytes
+    #msg = s.recv(1024)
+    #print('Msg: ', msg)
+    main_window_text_data_output.insert(tkinter.INSERT, '\n'+str(time_cur))
+    #print(msg.decode('ascii'))
+    main_window.after(500, request_data)
 
 
 main_window.geometry("900x400")
@@ -47,16 +58,5 @@ main_window_text_data_output = tkinter.Text(main_window)
 main_window_text_data_output.insert(tkinter.INSERT, 'Hello')
 main_window_text_data_output.grid(row=2, column=0)
 
+main_window.after(1000, request_data)
 main_window.mainloop()
-
-while True:
-
-    time_cur = datetime.datetime.now()
-    print(time_cur)
-
-    # Receive no more than 1024 bytes
-    msg = s.recv(1024)
-
-    print(msg.decode('ascii'))
-
-    sleep(0.5)
