@@ -19,7 +19,7 @@ serversocket.listen(5)
 print('host is listening, port = ', port, ' host = ', host)
 while True:
    # establish a connection
-   clientsocket.addr = serversocket.accept()      
+   clientsocket,addr = serversocket.accept()      
 
    print("Got a connection from %s" % str(addr))
     
