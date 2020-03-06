@@ -9,14 +9,17 @@ root.resizable(FALSE, FALSE)
 
 check_btn_var = BooleanVar(value=FALSE)
 
-textbox = Text(root, heigh=40, width=80)
+textbox = Text(root, heigh=30, width=80)
 textbox.tag_config('changed', background ='GREY', foreground='white')
 textbox.config(state='disabled')
+#scroll_text = Scrollbar(orient=VERTICAL, command=textbox.yview)
+#textbox.configure(yscrollcommand=scroll_text.set)
+#scroll_text.pack(side="right", fill="y")
 
 fontstyle = ('sans-serif', 11)
 label_can_data_text = Label(root, text='  ID      Length      Data1      Data2      Data3       Data4      Data5      Data6       Data7       Data8', font=fontstyle)
 label_can_data_text.config(font=fontstyle)
-#textbox.pack(side=LEFT)
+textbox.pack(side=LEFT)
 
 #buttons
 checkbutton_filters_masks = Checkbutton(root, 
@@ -66,16 +69,16 @@ def printing():
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
     global list_can_data_prev
+
     textbox.config(state='normal')
     column_text = 0
     for i in range(10):
-        textbox.insert('%d.0' %(column_text), '%x\t' % (list_can_data[i]))
-        print('Textbox index : ', textbox.get(2), ' Column num: ', column_text)
+        textbox.insert(0.0, '%x\t' % (list_can_data[i]))
+        #print('Textbox index : ', textbox.get(2), ' Column num: ', column_text)
         column_text +=1
-        #column_text +=len(list_can_data_prev[i])
-    #textbox.mark_set("insert", "1.1")
     textbox.config(state='disabled')
-    textbox.insert('1.0', '\n')
+    #textbox.yview('end')
+    textbox.insert('2.0', '\n')
     
     count += 1
     '''textbox.insert('0.0', '%x\t%x\t%x\t%x\t%x\t%x\t%x\t%x\t%x\t' % 
@@ -96,7 +99,7 @@ def printing():
         entry_can_mask.config(state=NORMAL)
     
         
-    root.after(300, printing)
+    root.after(50, printing)
 
 
 root.after(100, printing)
