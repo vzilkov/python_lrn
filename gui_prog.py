@@ -74,7 +74,7 @@ def printing():
     column_text = 0
     for i in range(10):
         textbox.insert(0.0, '%x\t' % (list_can_data[i]))
-        #print('Textbox index : ', textbox.get(2), ' Column num: ', column_text)
+        print(list_can_data, '\n')
         column_text +=1
     textbox.config(state='disabled')
     #textbox.yview('end')
