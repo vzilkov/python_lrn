@@ -71,8 +71,15 @@ def printing():
     print('\nID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8')
     #print(*list_can_data_prev, sep='\t')
     #print([hex(x) for x in list_can_data_prev], sep='\t')
-    for i in range(10):
-        print(colored(hex(list_can_data_prev[i]), 'green', 'on_red'), end='\t')
+    if list_can_data != list_can_data_prev:
+        for i in range(10):
+            if list_can_data[i] != list_can_data_prev[i]:
+                print(colored(hex(list_can_data_prev[i]), None, 'on_magenta'), end='\t')
+            else:
+                print(hex(list_can_data_prev[i]), end='\t')
+    else:
+        print(*list_can_data_prev, sep='\t')
+    list_can_data_prev = list_can_data
     #end test
 
     if check_btn_var.get() is False: #if checkbtn pressed
