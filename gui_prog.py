@@ -10,6 +10,7 @@ root.geometry("1024x600")
 root.resizable(FALSE, FALSE)
 
 check_btn_var = BooleanVar(value=FALSE)
+check_btn_var_light_up = BooleanVar(value=FALSE)
 
 #textbox = Text(root, heigh=30, width=80)
 #textbox.tag_config('changed', background ='GREY', foreground='white')
@@ -27,7 +28,7 @@ checkbutton_filters_masks = Checkbutton(root,
                                         text='Check can filter & mask', 
                                         var=check_btn_var)
 
-checkbutton_light_up = Checkbutton(root, text='Light up changed data')
+checkbutton_light_up = Checkbutton(root, text='Light up changed data', var=check_btn_var_light_up)
 
 checkbutton_trace = Checkbutton(root, text='Fixed/Rolling trace')
 
@@ -59,19 +60,23 @@ list_can_data_prev = [0,1,2,3,4,5,6,7,8,9]
 
 def printing():
     global count
-    global check_btn_var
-
+    global check_btn_var, check_btn_var_light_up
+    global list_can_data_prev
     #start test
 
-    list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
+    matrix = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+            [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]]
+    print(len(matrix))
+    a = [20,21,22,23,24,25,26,27,28,29]
+    matrix.append(a)
+    for row in range(10)
+        print(*matrix)
+    '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
-    global list_can_data_prev
-
-    print('\nID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8')
-    #print(*list_can_data_prev, sep='\t')
-    #print([hex(x) for x in list_can_data_prev], sep='\t')
-    if list_can_data != list_can_data_prev:
+    print('ID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8\n')
+    
+    if list_can_data != list_can_data_prev and check_btn_var_light_up.get() is True:
         for i in range(10):
             if list_can_data[i] != list_can_data_prev[i]:
                 print(colored(hex(list_can_data_prev[i]), None, 'on_magenta'), end='\t')
@@ -79,7 +84,9 @@ def printing():
                 print(hex(list_can_data_prev[i]), end='\t')
     else:
         print(*list_can_data_prev, sep='\t')
-    list_can_data_prev = list_can_data
+
+    list_can_data_prev = list_can_data'''
+    
     #end test
 
     if check_btn_var.get() is False: #if checkbtn pressed
@@ -89,8 +96,7 @@ def printing():
         entry_can_filter.config(state=NORMAL)
         entry_can_mask.config(state=NORMAL)
     
-        
-    root.after(80, printing)
+    root.after(100, printing)
 
 
 root.after(400, printing)
