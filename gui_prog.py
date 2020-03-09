@@ -3,7 +3,8 @@ from tkinter import *
 #test
 import random
 from colorama import init 
-from termcolor import colored 
+#from termcolor import colored 
+from os import system, name 
 
 root = Tk()
 root.geometry("1024x600")
@@ -57,27 +58,31 @@ checkbutton_trace.place(x=x_column_periph, y=130)
 
 count = 0
 list_can_data_prev = [0,1,2,3,4,5,6,7,8,9]
+dict_can_data = dict(id=0, lenght=0, data={0:10,1:11,2:12,3:13,4:14,5:15,6:16,7:17})
 
 def printing():
     global count
     global check_btn_var, check_btn_var_light_up
     global list_can_data_prev
     #start test
-
-    matrix = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
-            [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]]
-    print(len(matrix))
-    a = [20,21,22,23,24,25,26,27,28,29]
-    matrix.append(a)
-    for row in range(10)
-        print(*matrix)
+    #dict_can_data = {'id': 0, 'lenght':8, 'data':{0:10,1:11,2:12,3:13,4:14,5:15,6:16,7:17}}
+    system('cls')
+    print(dict_can_data[3])
+    for i in range(5):
+        dict_can_data[i] = dict(id=i, lenght=8, data={0:10+i,1:11,2:12,3:13,4:14,5:15,6:16,7:17})
+        for j in range(8):
+            dict_can_data[i]['data'][j] = random.randrange(0,0x0F)
+        
+    for i in range(5):
+        print(dict_can_data[i])
+    print('====================================================================')
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
-    print('ID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8\n')
+    #print('ID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8\n')
     
     if list_can_data != list_can_data_prev and check_btn_var_light_up.get() is True:
-        for i in range(10):
+        for i in range(8):
             if list_can_data[i] != list_can_data_prev[i]:
                 print(colored(hex(list_can_data_prev[i]), None, 'on_magenta'), end='\t')
             else:
