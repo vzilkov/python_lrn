@@ -3,7 +3,8 @@ from tkinter import *
 #test
 import random
 from colorama import init 
-from termcolor import colored 
+#from termcolor import colored 
+from os import system, name 
 
 import os
 
@@ -59,6 +60,7 @@ checkbutton_trace.place(x=x_column_periph, y=130)
 
 count = 0
 list_can_data_prev = [0,1,2,3,4,5,6,7,8,9]
+dict_can_data = dict(id=0, lenght=0, data={0:10,1:11,2:12,3:13,4:14,5:15,6:16,7:17})
 
 print_can_data = [{'id':11, 'lenght':8, 'data':{0:1,1:2, 2:3, 3:4, 4:5, 5:6, 6:7,7:8}}]
 
@@ -67,18 +69,32 @@ def printing():
     global check_btn_var, check_btn_var_light_up
     global list_can_data_prev
     #start test
+<<<<<<< HEAD
     os.system('cls')
     print(print_can_data, sep='\n')
     add_data = {'id':2, 'lenght':7, 'data':{0:11,1:12, 2:13, 3:14, 4:15, 5:16, 6:17,7:18}}
     print_can_data.append(add_data)
 
+=======
+    #dict_can_data = {'id': 0, 'lenght':8, 'data':{0:10,1:11,2:12,3:13,4:14,5:15,6:16,7:17}}
+    system('cls')
+    print(dict_can_data[3])
+    for i in range(5):
+        dict_can_data[i] = dict(id=i, lenght=8, data={0:10+i,1:11,2:12,3:13,4:14,5:15,6:16,7:17})
+        for j in range(8):
+            dict_can_data[i]['data'][j] = random.randrange(0,0x0F)
+        
+    for i in range(5):
+        print(dict_can_data[i])
+    print('====================================================================')
+>>>>>>> 2a5847c3fb7b4d954c3bf0d21a6215949fe0ab33
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
-    print('ID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8\n')
+    #print('ID\tLength\tData1\tData2\tData3\tData4\tData5\tData6\tData7\tData8\n')
     
     if list_can_data != list_can_data_prev and check_btn_var_light_up.get() is True:
-        for i in range(10):
+        for i in range(8):
             if list_can_data[i] != list_can_data_prev[i]:
                 print(colored(hex(list_can_data_prev[i]), None, 'on_magenta'), end='\t')
             else:
