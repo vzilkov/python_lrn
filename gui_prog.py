@@ -5,10 +5,12 @@ import random
 from colorama import init 
 from termcolor import colored 
 
+import os
+
 root = Tk()
 root.geometry("1024x600")
 root.resizable(FALSE, FALSE)
-
+os.system('cls')
 check_btn_var = BooleanVar(value=FALSE)
 check_btn_var_light_up = BooleanVar(value=FALSE)
 
@@ -58,19 +60,18 @@ checkbutton_trace.place(x=x_column_periph, y=130)
 count = 0
 list_can_data_prev = [0,1,2,3,4,5,6,7,8,9]
 
+print_can_data = [{'id':11, 'lenght':8, 'data':{0:1,1:2, 2:3, 3:4, 4:5, 5:6, 6:7,7:8}}]
+
 def printing():
     global count
     global check_btn_var, check_btn_var_light_up
     global list_can_data_prev
     #start test
+    os.system('cls')
+    print(print_can_data, sep='\n')
+    add_data = {'id':2, 'lenght':7, 'data':{0:11,1:12, 2:13, 3:14, 4:15, 5:16, 6:17,7:18}}
+    print_can_data.append(add_data)
 
-    matrix = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
-            [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]]
-    print(len(matrix))
-    a = [20,21,22,23,24,25,26,27,28,29]
-    matrix.append(a)
-    for row in range(10)
-        print(*matrix)
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
@@ -96,8 +97,8 @@ def printing():
         entry_can_filter.config(state=NORMAL)
         entry_can_mask.config(state=NORMAL)
     
-    root.after(100, printing)
+    root.after(500, printing)
 
 
-root.after(400, printing)
+root.after(500, printing)
 root.mainloop()
