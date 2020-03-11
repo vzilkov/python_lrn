@@ -5,7 +5,7 @@ import random
 from colorama import init 
 #from termcolor import colored 
 from os import system, name 
-
+import pandas
 import os
 
 root = Tk()
@@ -69,25 +69,11 @@ def printing():
     global check_btn_var, check_btn_var_light_up
     global list_can_data_prev
     #start test
-<<<<<<< HEAD
     os.system('cls')
-    print(print_can_data, sep='\n')
-    add_data = {'id':2, 'lenght':7, 'data':{0:11,1:12, 2:13, 3:14, 4:15, 5:16, 6:17,7:18}}
+    add_data = {'id':2, 'lenght':7, 'data':{0:11,1:12,2:13,3:14,4:15,5:16,6:17,7:18}}
     print_can_data.append(add_data)
-
-=======
-    #dict_can_data = {'id': 0, 'lenght':8, 'data':{0:10,1:11,2:12,3:13,4:14,5:15,6:16,7:17}}
-    system('cls')
-    print(dict_can_data[3])
-    for i in range(5):
-        dict_can_data[i] = dict(id=i, lenght=8, data={0:10+i,1:11,2:12,3:13,4:14,5:15,6:16,7:17})
-        for j in range(8):
-            dict_can_data[i]['data'][j] = random.randrange(0,0x0F)
-        
-    for i in range(5):
-        print(dict_can_data[i])
-    print('====================================================================')
->>>>>>> 2a5847c3fb7b4d954c3bf0d21a6215949fe0ab33
+    df = pandas.DataFrame(print_can_data)
+    print(df)
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
 
