@@ -68,39 +68,56 @@ print_can_data = {0: {'id': 11, 'lenght': 8,
 'data0': 21, 'data1': 22, 'data2': 23, 'data3': 24, 
 'data4': 25, 'data5': 26, 'data6': 27, 'data7': 28}}
 
+saved_can_bus_data = []
+
+class can_bus_pkg:
+    def __init__(self, can_id, can_lenght, *can_data):
+        self.can_id = can_id
+        self.can_lenght = can_lenght
+        self.can_data = can_data
+    
+
+    def print_vals(self):
+        print('Class vars:')
+        print('can_id=', self.can_id)
+        print('can_lenght=', self.can_lenght)
+        print('can_data=', self.can_data)
+
 
 def printing():
     global count
     global check_btn_var, check_btn_var_light_up
     global list_can_data_prev
-    keys_vals = {'id','lenght',
-    'data0','data1','data2','data3'
-    'data4','data5','data6','data7'}
     #start test
+
     os.system('cls')
-    os.system('clear')
+    #os.system('clear')
+
+    global saved_can_bus_data
+    a = can_bus_pkg(random.randrange(0,5),random.randrange(0,8),[random.randrange(0,111),random.randrange(0,111),random.randrange(0,111),random.randrange(0,111)])
+    if len(saved_can_bus_data) == 0:
+        saved_can_bus_data.append(a)
+        print('=============================Empty list==============================')
     
-    lenght = random.randrange(0,8)
-    can_id = random.randrange(0,0x7FF)
-    can_data = []
-    for i in range(8):
-        can_data.append(random.randrange(0, 0xFF))
+    for obj in saved_can_bus_data:
+        if obj.can_id == a.can_id:
+            obj.can_lenght = a.can_lenght
+            obj.can_data = a.can_data
+            
+        else:
+            saved_can_bus_data.append(a)
+            break
 
-    add_data = {1:{'id': can_id, 'lenght': lenght}}
-    if lenght > 0:
-        for i in range(lenght):
-            add_data[1]['data%d' % (i)] = can_data[i]
-    print_can_data.update(add_data)
-    for x in list(print_can_data):
-        print(x)
-    #print(add_data)
+    i=0
+    for obj in saved_can_bus_data:
+        print(i,' ID: ', obj.can_id, ' lenght: ', obj.can_lenght, ' data: ', obj.can_data)
+        i+=1
 
-    for i in range(print_can_data[0]['lenght']):
-        print_can_data[0]['data'+str(i)] = random.randrange(0, 20)
+
     #print(print_can_data)
     df = pandas.DataFrame(print_can_data)
     #print(df.to_markdown())
-    print(df)
+    #print(df)
     #df.to_excel("output.xlsx")
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
