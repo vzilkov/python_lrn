@@ -78,7 +78,8 @@ def printing():
     'data4','data5','data6','data7'}
     #start test
     os.system('cls')
-
+    os.system('clear')
+    
     lenght = random.randrange(0,8)
     can_id = random.randrange(0,0x7FF)
     can_data = []
