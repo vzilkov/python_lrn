@@ -89,14 +89,17 @@ def printing():
     if lenght > 0:
         for i in range(lenght):
             add_data[1]['data%d' % (i)] = can_data[i]
-    
-    print(add_data)
+    print_can_data.update(add_data)
+    for x in list(print_can_data):
+        print(x)
+    #print(add_data)
 
     for i in range(print_can_data[0]['lenght']):
         print_can_data[0]['data'+str(i)] = random.randrange(0, 20)
-    print(print_can_data[0])
-    #df = pandas.DataFrame(print_can_data)
+    #print(print_can_data)
+    df = pandas.DataFrame(print_can_data)
     #print(df.to_markdown())
+    print(df)
     #df.to_excel("output.xlsx")
     '''list_can_data = [1, 2, random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF),
                      random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF), random.randrange(0,0xFF)]
