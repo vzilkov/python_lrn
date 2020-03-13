@@ -70,18 +70,23 @@ print_can_data = {0: {'id': 11, 'lenght': 8,
 
 saved_can_bus_data = []
 
+
 class can_bus_pkg:
     def __init__(self, can_id, can_lenght, *can_data):
         self.can_id = can_id
-        self.can_lenght = can_lenght
-        self.can_data = can_data
-    
-
+        if can_lenght >= 0 and can_lenght <= 8:
+            self.can_lenght = can_lenght
+            can_data_buf = list(can_data)
+            self.can_data = can_data_buf[0:self.can_lenght]
+        
     def print_vals(self):
-        print('Class vars:')
-        print('can_id=', self.can_id)
-        print('can_lenght=', self.can_lenght)
-        print('can_data=', self.can_data)
+        if self.can_lenght:
+            print('Class: can_id=%s\tcan_lenght=%s\tcan_data=%s' % (self.can_id, self.can_lenght, self.can_data))
+        else:
+            print('Class: can_id=%s\tcan_lenght=%s' % (self.can_id, self.can_lenght))
+
+    def compare_pkgs(self, comparison_pkg):
+        print('compare')
 
 
 def printing():
@@ -94,25 +99,33 @@ def printing():
     #os.system('clear')
 
     global saved_can_bus_data
-    a = can_bus_pkg(random.randrange(0,5),random.randrange(0,8),[random.randrange(0,111),random.randrange(0,111),random.randrange(0,111),random.randrange(0,111)])
+    received_data = can_bus_pkg(random.randrange(0, 3),random.randrange(0, 8),
+    random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), 
+    random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111))
     if len(saved_can_bus_data) == 0:
-        saved_can_bus_data.append(a)
+        saved_can_bus_data.append(received_data)
         print('=============================Empty list==============================')
-    
-    for obj in saved_can_bus_data:
-        if obj.can_id == a.can_id:
-            obj.can_lenght = a.can_lenght
-            obj.can_data = a.can_data
-            
-        else:
-            saved_can_bus_data.append(a)
+
+    saved_can_bus_data_lenght = len(saved_can_bus_data)
+    print('pkgs count = ', saved_can_bus_data_lenght)
+    saved_can_bus_data[0].print_vals()
+
+    data = [0,1,2,3,4,5,6,7]
+    '''for i in data:
+        print('i=%s'%i)
+        if i == 3:
+            print('success!!!')
             break
+        print('did not match')'''
+    print('compare val: %s'%cmp(1,3))
 
-    i=0
-    for obj in saved_can_bus_data:
-        print(i,' ID: ', obj.can_id, ' lenght: ', obj.can_lenght, ' data: ', obj.can_data)
-        i+=1
-
+    for i in range(saved_can_bus_data_lenght):
+        if received_data.can_id == saved_can_bus_data[i].can_id:
+            print('Values are equal')
+            saved_can_bus_data[i] = received_data
+            saved_can_bus_data[i].print_vals()
+        else:
+            print('Values are not equal')
 
     #print(print_can_data)
     df = pandas.DataFrame(print_can_data)
