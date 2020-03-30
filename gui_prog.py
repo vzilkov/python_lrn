@@ -89,7 +89,6 @@ def printing():
     if lenght > 0:
         for i in range(lenght):
             add_data[1]['data%d' % (i)] = can_data[i]
-    
     print(add_data)
 
     for i in range(print_can_data[0]['lenght']):
