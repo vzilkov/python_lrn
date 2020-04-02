@@ -1587,12 +1587,12 @@
 										"$ref": "AAAAAAFw00huUv12Vz8="
 									},
 									"font": "Arial;13;0",
-									"left": 551,
-									"top": 401,
+									"left": 549,
+									"top": 463,
 									"width": 16.6181640625,
 									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 15,
+									"alpha": 0.20668330719265238,
+									"distance": 63.34824385884742,
 									"hostEdge": {
 										"$ref": "AAAAAAFw00huUv141GA="
 									},
@@ -1883,12 +1883,12 @@
 										"$ref": "AAAAAAFw01BqV/32zG0="
 									},
 									"font": "Arial;13;0",
-									"left": 695,
-									"top": 465,
+									"left": 694,
+									"top": 464,
 									"width": 16.6181640625,
 									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 15,
+									"alpha": 1.7126932466769083,
+									"distance": 14.142135623730951,
 									"hostEdge": {
 										"$ref": "AAAAAAFw01BqWP34A8U="
 									},

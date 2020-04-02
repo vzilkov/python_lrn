@@ -98,10 +98,12 @@ def printing():
     os.system('cls')
     #os.system('clear')
 
+#receiving CAN data
     global saved_can_bus_data
     received_data = can_bus_pkg(random.randrange(0, 3),random.randrange(0, 8),
     random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), 
     random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111), random.randrange(0, 111))
+
     if len(saved_can_bus_data) == 0:
         saved_can_bus_data.append(received_data)
         print('=============================Empty list==============================')
@@ -117,8 +119,8 @@ def printing():
             print('success!!!')
             break
         print('did not match')'''
-    print('compare val: %s'%cmp(1,3))
-
+#compare data and save them
+    flag_for_append_data = 0xFF
     for i in range(saved_can_bus_data_lenght):
         if received_data.can_id == saved_can_bus_data[i].can_id:
             print('Values are equal')
