@@ -1,12 +1,18 @@
 import can_data_class
+import time
+import random
+print('===========Start==========')
 a = can_data_class.can_data(1,2,3,4,5)
-a.print_data()
+#a.print_data()
 
-Dict = {'id': 1, 'length': 2, 'data': [3,4,5,6,7,8,9,10]}
-#print(Dict)
-mass = [Dict]
-b = {'id': 11, 'length': 12, 'data': [3,4,5,6,7,8,9,10]}
-mass.append(b)
-
-a = can_data_class.can_data(11,12,13,14,15)
+#a = can_data_class.can_data(11,12,13,14,15)
 a.print_data()
+i=0
+while i<1:
+    i=0
+    #a = can_data_class.can_data(random.randrange(0, 3), random.randrange(0, 8), random.randrange(0,50), random.randrange(0, 50), random.randrange(0, 50))
+    #a.print_data()
+    a = [1,2,3,4,5]
+    for b in range(len(a)):
+        print(a[b])
+    time.sleep(0.5)

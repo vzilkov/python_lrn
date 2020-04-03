@@ -3,15 +3,15 @@ class can_data:
 
     def __init__(self, id, length, *data):
         can_data_dict = {'id': id, 'length': length, 'data': data}
-        if not any(can_dict['id'] == can_data_dict['id'] for can_dict in self.can_data_massive):
-            print('new element in massive!')
-            self.append_can_buf(can_data_dict)
-        else:
+        if any(can_dict['id'] == can_data_dict['id'] for can_dict in self.can_data_massive):
             print('There is no new element in massive')
-            can_dict['length']
+            print(self.can_data_massive[can_dict])
+        else:
+            print('New element in massive!')
+            self.append_can_buf(can_data_dict)
 
     def print_data(self):
-        print("*******Class can_data printing...")
+        print("***********Class can_data printing***********")
         print(*self.can_data_massive, sep='\n')
 
     def clear(self):
