@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 output.xlsx
+.vscode/settings.json
+output/rasp_new_prog.exe
+output.txt
