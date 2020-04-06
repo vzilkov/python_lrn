@@ -10,6 +10,7 @@ root = Tk()
 #buttons
 check_btn_var = BooleanVar(value=FALSE)
 check_btn_var_light_up = BooleanVar(value=FALSE)
+checkbutton_var_trace = BooleanVar(value=TRUE)
 
 checkbutton_filters_masks = Checkbutton(root, 
                                         text='Check can filter & mask', 
@@ -17,11 +18,11 @@ checkbutton_filters_masks = Checkbutton(root,
 #checkbutton_filters_masks.grid(row=0, column=2)
 
 
-checkbutton_light_up = Checkbutton(root, text='Light up changed data', var=check_btn_var_light_up)
+checkbutton_light_up = Checkbutton(root, text='Light up changed data', var= check_btn_var_light_up)
 #checkbutton_light_up.grid(row=3, column=2)
 
 
-checkbutton_trace = Checkbutton(root, text='Fixed/Rolling trace')
+checkbutton_trace = Checkbutton(root, text='Fixed/Rolling trace', var= checkbutton_var_trace)
 #checkbutton_trace.grid(row=4, column=2)
 
 
@@ -47,12 +48,10 @@ windowWidth = root.winfo_reqwidth()
 windowHeight = root.winfo_reqheight()
 positionRight = int(root.winfo_screenwidth() - windowWidth)
 positionDown = int(root.winfo_screenheight() - windowHeight)
-root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenheight()))
-#root.geometry("+{}+{}".format(positionRight, positionDown))
 
 #textbox & scrollbar:
 ybar = Scrollbar(root, width=30)
-textbox = Text(root, width=130, height=root.winfo_screenheight())
+textbox = Text(root, width=90, height=root.winfo_screenheight(), font=('Courier New', 16))
 ybar.config(command=textbox.yview)
 textbox.config(yscrollcommand=ybar.set)
 
@@ -67,15 +66,27 @@ entry_can_filter.pack(side=TOP)
 label_can_mask.pack(side=TOP)
 entry_can_mask.pack(side=TOP)
 
+#root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenheight()))
+#root.geometry("+{}+{}".format(0, 0))
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    root.attributes('-zoomed', True)
+else:
+    root.attributes('-fullscreen', True)
+
 def period():
     can_data.read_data()
     #can_data.print_data()
+
+    if checkbutton_var_trace.get():
+        textbox.delete('0.0', END)
+    else:
+        import datetime
+        textbox.insert('0.0', datetime.datetime.now())
+    
     import tabulate
-    import datetime
-    textbox.insert('0.0', datetime.datetime.now())
     textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
     
-    #can_data.print_data(can_data.can_data_dict)
     if check_btn_var.get() is False: #if checkbtn pressed
         entry_can_filter.config(state=DISABLED)
         entry_can_mask.config(state=DISABLED)
