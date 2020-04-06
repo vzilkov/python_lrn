@@ -42,13 +42,23 @@ entry_can_filter = Entry(root, text='enter vals in hex 0-7FF')
 entry_can_mask = Entry(root, text='enter values in hex 0-7FF')
 #entry_can_mask.grid(row=2, column=2)
 
-#textbox:
-textbox = Text(root)
-textbox.insert(INSERT, 'Hello!')
+#place root window to right
+windowWidth = root.winfo_reqwidth()
+windowHeight = root.winfo_reqheight()
+positionRight = int(root.winfo_screenwidth() - windowWidth)
+positionDown = int(root.winfo_screenheight() - windowHeight)
+root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenheight()))
+#root.geometry("+{}+{}".format(positionRight, positionDown))
 
+#textbox & scrollbar:
+ybar = Scrollbar(root, width=30)
+textbox = Text(root, width=130, height=root.winfo_screenheight())
+ybar.config(command=textbox.yview)
+textbox.config(yscrollcommand=ybar.set)
 
 #packs:
 textbox.pack(side=LEFT)
+ybar.pack(side=LEFT, fill=BOTH)
 checkbutton_light_up.pack(side=TOP)
 checkbutton_trace.pack(side=TOP)
 checkbutton_filters_masks.pack(side=TOP)
@@ -57,21 +67,14 @@ entry_can_filter.pack(side=TOP)
 label_can_mask.pack(side=TOP)
 entry_can_mask.pack(side=TOP)
 
-
-#place root window to right
-windowWidth = root.winfo_reqwidth()
-windowHeight = root.winfo_reqheight()
-positionRight = int(root.winfo_screenwidth() - windowWidth)
-positionDown = int(root.winfo_screenheight() - windowHeight)#-30-1
-#root.geometry('%sx%s'%(windowWidth, root.winfo_screenheight()))
-#root.geometry("+{}+{}".format(positionRight, positionDown))
-
-
 def period():
     can_data.read_data()
     #can_data.print_data()
     import tabulate
+    import datetime
+    textbox.insert('0.0', datetime.datetime.now())
     textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
+    
     #can_data.print_data(can_data.can_data_dict)
     if check_btn_var.get() is False: #if checkbtn pressed
         entry_can_filter.config(state=DISABLED)
