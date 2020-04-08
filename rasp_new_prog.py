@@ -68,11 +68,8 @@ entry_can_mask.pack(side=TOP)
 
 #root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenheight()))
 #root.geometry("+{}+{}".format(0, 0))
-from sys import platform
-if platform == "linux" or platform == "linux2":
-    root.attributes('-zoomed', True)
-else:
-    root.attributes('-fullscreen', True)
+
+root.attributes('-fullscreen', True)
 
 def period():
     can_data.read_data()
