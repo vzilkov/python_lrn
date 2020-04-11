@@ -16,38 +16,36 @@ class spi_to_can_brd_exchange:
     def spi_close(self):
         self.spi.close()
         self.GPIO.output(self.nCS_pin, self.GPIO.HIGH)
-    
-    def spi_response_data(self, *data):
-        self.GPIO.output(nCS_pin, self.GPIO.LOW)
-        self.response = self.spi.xfer2(data)
-        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
-        print('Result is: ', self.response)
-    
-    def spi_read_data(self):
-        self.spi.readbytes(n) #read n bytes from SPI
-
-    
-    def device_reset(self):
+        
+    def device_reset(self):#not tested
         self.GPIO.output(self.nCS_pin, self.GPIO.LOW)
-        INSTRUCTION_RESET = [0xC0]
+        
+        INSTRUCTION_RESET = 0xC0
         self.spi.writebytes(INSTRUCTION_RESET)
+
         self.GPIO.output(self.nCS_pin, self.GPIO.HIGH)
     
-    def device_read_data(self, adr):#works??
+    def device_read_data(self, adr):#not tested
         self.GPIO.output(self.nCS_pin, self.GPIO.LOW)
         
         INSTRUCTION_READ = 0x03
         self.spi.writebytes([INSTRUCTION_READ, adr])
-        read_byte = self.spi.readbytes(14)
+        #read_byte = self.spi.xfer3([hex(adr)], 1, [, self.spi.max_speed_hz, 1, 8])
+        read_byte = self.spi.readbytes(1)
         
         self.GPIO.output(self.nCS_pin, self.GPIO.HIGH)
         return read_byte
         
-    def device_write_byte(self, adr, val):
+    def device_write_byte(self, adr, val):#not tested
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+
         INSTRUCTION_WRITE = 0x02
-        buf = bytes([INSTRUCTION_WRITE, adr, val])
+        buf = [INSTRUCTION_WRITE, hex(adr), hex(val)]
+        self.spi.writebytes(buf)
+
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
     
-    def read_rx_buf(self):
+    def read_rx_buf(self):#?????????????
         self.GPIO.output(nCS_pin, self.GPIO.LOW)
         
         INSTRUCTION_READ_RX_BUF = 0x90 #0x90 - adr 0x61, 0x92 - adr 0x66, 0x94 - adr 0x71, 0x96 - adr 0x76
@@ -55,25 +53,61 @@ class spi_to_can_brd_exchange:
         read_byte = self.spi.readbytes(1)
         
         self.GPIO.output(nCS_pin, self.GPIO.HIGH)
-        
-    '''def instruction_write:
-    def instruction_load_tx_buf:
-    def instruction_rts:
-    def instruction_read_status:
-    def instruction_rx_status:
-    def instruction_bit_modify:
-        
-        
-        
-        
-        INSTRUCTION_LOAD_TX_BUF = lambda parameter_list: expression
-        INSTRUCTION_RTS lambda parameter_list: expression #REQUEST TO SEND
-        INSTRUCTION_READ_STATUS 0xA0
-        INSTRUCTION_RX_STATUS   0xB0
-        INSTRUCTION_BIT_MODIFY  0x05'''
+        return read_byte
+
+    def load_tx_buf(self):
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+        INSTRUCTION_LOAD_TX_BUF = 0
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
+        return 1
+    
+    def req_to_send(self):
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+        INSTRUCTION_RTS = 1
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
+        return 1
+    
+    def read_status(self): #not tested
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+
+        INSTRUCTION_READ_STATUS = 0xA0
+        self.spi.writebytes(INSTRUCTION_READ_STATUS)
+        read_bytes = self.spi.readbytes(2)
+
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
+
+        '''if read_bytes[0] == read_bytes[1]:
+            return read_bytes[0]
+        else:
+            return 0xFF #error'''
+        return read_bytes
+
+    def read_rx_status(self): #not tested
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+
+        INSTRUCTION_RX_STATUS = 0xB0
+        self.spi.writebytes(INSTRUCTION_RX_STATUS)
+        read_bytes = self.spi.readbytes(2)
+
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
+
+        '''if read_bytes[0] == read_bytes[1]:
+            return read_bytes[0]
+        else:
+            return 0xFF #error'''
+        return read_bytes
+
+    def bit_modify(self, adr_byte, mask_byte, data_byte):
+        self.GPIO.output(nCS_pin, self.GPIO.LOW)
+
+        INSTRUCTION_BIT_MODIFY = 0x05
+        buf = [INSTRUCTION_BIT_MODIFY, adr_byte, mask_byte, data_byte]
+        self.spi.writebytes(buf)
+
+        self.GPIO.output(nCS_pin, self.GPIO.HIGH)
+
         
 mcp2515 = spi_to_can_brd_exchange(100)
 
-#for i in range(50):
-print('memory val = ', (mcp2515.device_read_data(0xf)))
+print('memory val = ', (mcp2515.device_read_data(0xXF)))
 mcp2515.spi_close()
