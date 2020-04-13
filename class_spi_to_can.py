@@ -41,7 +41,7 @@ class spi_to_can_brd_exchange:
         read_byte = self.spi.readbytes(1)
         
         self.cs_high()
-        return read_byte
+        return read_byte[0]
         
     def device_write_byte(self, adr, val):
         self.cs_low()
@@ -112,15 +112,44 @@ class spi_to_can_brd_exchange:
         self.spi.writebytes(buf)
 
         self.cs_high()
+        
+    def write_reg_and_check(self, adr, data):
+        self.device_write_byte(adr, data)
+        return_data = self.device_read_data(adr)
+        if data == return_data:
+            return return_data
+        else:
+            return 0xFF
 
 
 mcp2515 = spi_to_can_brd_exchange(1000)
-mcp2515.device_write_byte(0x31, 0xAA)
 
-print('memory val = ', mcp2515.device_read_data(0x31))
-print('read_status = ', mcp2515.read_status())
-print('read_rx_status = ', mcp2515.read_rx_status())
+print('write & check data = 0x%X' % mcp2515.write_reg_and_check(0x31, 0xAA))
+
+adr = 0x30
+while mcp2515.device_read_data(adr) and 0b0100 == True:
+    adr += 0x10
+    if adr > 0x50:
+        adr = 0x30
+#if adr = 0x30
+TXBCTRL = [0x30,0x40,0x50]
+CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
+CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
+TXBCTRL[0] = mcp2515.device_read_data(TXBCTRL[0])#change txbctrl[0] - adr to value
+CANCTRL[0] = mcp2515.device_read_data(CANCTRL[0])
+if (TXBCTRL[0] & 0b01110000) == 0:#check ABTF, MLOA, TXERR, TXREQ, CANCTRL[ABAT]
+    print('TXB0CTRL and 0b01110000 = 0')
+    
+    data = mcp2515.device_read_data(adr)
+    data &= 0xC0
+    priority=0
+    data |= priority
+    print('adr = 0x%X, data = 0x%X'%(adr, mcp2515.write_reg_and_check(adr, data)))
+    
+    if(mcp2515.device_read_data(adr)&0b00001000 == 0)
+
 mcp2515.spi_close()
+print('spi closed')
 '''import time
 while True:
     mcp2515.cs_low()
