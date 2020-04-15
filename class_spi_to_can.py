@@ -130,7 +130,7 @@ class spi_to_can_brd_exchange:
                         self.device_read_data(ELFG)]
         return errors_rec_tec
 
-    def set_config_mode(self, bit_rate, filter_num):#not tested
+    def set_config_mode(self, bit_rate, filter_num):
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
         while self.device_read_data(CANSTAT[0]) & 0x80 != 0x80:
@@ -141,12 +141,12 @@ class spi_to_can_brd_exchange:
         print('Config mode in config mode')
         # 500 kbps, Bit rate = 500 
         # Sample point = 75%
-        cnf =   [0b11000000, #0xC0
-                0b10010001, #0x91
-                0b00000001] #0x01
-        self.device_write_byte(0x2A, 0b11000000)
-        self.device_write_byte(0x29, 0b10010001)
-        self.device_write_byte(0x28, 0b00000001)
+        cnf1 = 0b00000011
+        cnf2 = 0b00000000 | 2<<3 | 1
+        cnf3 = 1
+        self.device_write_byte(0x2A, cnf1)
+        self.device_write_byte(0x29, cnf2)
+        self.device_write_byte(0x28, cnf3)
 
         #TXRTSCTRL register
         TXRTSCTRL = 0x0D
@@ -218,15 +218,31 @@ class spi_to_can_brd_exchange:
             self.device_write_byte(CANCTRL[0], read_buf)#set to loopback mode
         print('Loopback mode completed')
         
-    #def set_normal_mode(self):
+    def set_normal_mode(self):
+        #self.set_config_mode(500,0)
+        CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
+        CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
+        
+        while self.device_read_data(CANSTAT[0]) & 0x80 != 0x80:#to config
+            read_buf = self.device_read_data(CANCTRL[0])
+            read_buf &= 0x1F
+            read_buf |= 0x80
+            self.device_write_byte(CANCTRL[0], read_buf)#set to config mode
+        
+        while self.device_read_data(CANSTAT[0]) & 0xE0 != 0x00:#to normal
+            read_buf = self.device_read_data(CANCTRL[0]) & 0x1F
+            self.device_write_byte(CANCTRL[0], read_buf)#set to normal mode
+        print('Normal mode completed')
+        
     def __check_free_tx_buf(self):#returns number of first free TX buffer
         TXBCTRL = [0x30,0x40,0x50]
         for buf_num in range(3):
-            if self.device_read_data(TXBCTRL[i]) & (1<<3) == 0:#TXREQ = 0
+            if (self.device_read_data(TXBCTRL[buf_num]) & (1<<3)) == 0:#TXREQ = 0
+                print('Free TX buf num = ', buf_num)
                 return buf_num
         return 0xFF
 
-    def can_tx_func(self, ID, lenght, data):#haven't wrote yet
+    def can_tx_func(self, ID, lenght, *tx_data):#haven't wrote yet
         buf_num = self.__check_free_tx_buf()
         
         TXBCTRL = [0x30,0x40,0x50]
@@ -270,12 +286,12 @@ class spi_to_can_brd_exchange:
 
         self.write_reg_and_check(TXBDLC[buf_num], lenght)
         for i in range(lenght):#Tx buffer
-            self.write_reg_and_check((TXBnD[buf_num]+i), data[i]+10)
-
-        priority = 3 - buf_num
+            self.write_reg_and_check((TXBnD[buf_num]+i), tx_data[0][i]+10)
+            
+        priority = 0#3 - buf_num
         self.write_reg_and_check(TXBCTRL[buf_num], 
-        0b00001000 | (priority & 0x03))#TXREQ, 0bXX - priority
-
+        1<<3 | (priority & 0x03))#TXREQ, 0bXX - priority
+              
         print('CAN msg sent')
         
     def can_rx_func(self):
@@ -291,20 +307,23 @@ class spi_to_can_brd_exchange:
         for i in range(lenght):
             rcv_data.append(self.device_read_data(RXBD0[0]+i))
         ID = (self.device_read_data(RXBSIDH[0])<<3)|self.device_read_data(RXBSIDL[0])>>5
-        print('ID=0x%X, lenght=0x%X, rcv_data = ' % (ID,lenght), rcv_data)
+        print('ID=0x%X, lenght=%d, rcv_data = ' % (ID,lenght), rcv_data)
         print('CAN msg received')
         
         
-mcp2515 = spi_to_can_brd_exchange(100)
+mcp2515 = spi_to_can_brd_exchange(200)
 
-print('write & check data = 0x%X' % mcp2515.write_reg_and_check(0x31, 0xAA))
 print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
-print('config mode: ')
 mcp2515.set_config_mode(0,0)
-print('loopback mode: ')
-mcp2515.set_loopback_mode(0)
-
-mcp2515.can_tx_func(0)
+#print('loopback mode: ')
+#mcp2515.set_loopback_mode(0)
+mcp2515.set_normal_mode()
+import random
+import time
+data = [random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
+        random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
+        random.randrange(0,0xFF),random.randrange(0,0xFF)]
+mcp2515.can_tx_func(0x111,2,[10,11])
 mcp2515.can_rx_func()
 mcp2515.spi_close()
 print('spi closed')
