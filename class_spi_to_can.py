@@ -219,64 +219,63 @@ class spi_to_can_brd_exchange:
         print('Loopback mode completed')
         
     #def set_normal_mode(self):
-
-    def can_tx_func(self, buf_num):#haven't wrote yet
-        adr = 0x30
+    def __check_free_tx_buf(self):#returns number of first free TX buffer
         TXBCTRL = [0x30,0x40,0x50]
-        '''while (self.device_read_data(adr) & 0b0100):
-            adr += 0x10
-            if adr > 0x50:
-                adr = 0x30'''
-        #if adr = 0x30
+        for buf_num in range(3):
+            if self.device_read_data(TXBCTRL[i]) & (1<<3) == 0:#TXREQ = 0
+                return buf_num
+        return 0xFF
+
+    def can_tx_func(self, ID, lenght, data):#haven't wrote yet
+        buf_num = self.__check_free_tx_buf()
         
+        TXBCTRL = [0x30,0x40,0x50]
         reg_TXBCTRL = [0,0,0]
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
         CANINTF = 0x2C
         CANINTE = 0x2B
 
-        reg_TXBCTRL[0] = self.device_read_data(TXBCTRL[0])#change txbctrl[0] - adr to value
-        CANCTRL[0] = self.device_read_data(CANCTRL[0])
-        if (reg_TXBCTRL[0] & 0b01110000) == 0:#check ABTF, MLOA, TXERR, TXREQ, CANCTRL[ABAT]
+        reg_TXBCTRL[buf_num] = self.device_read_data(TXBCTRL[buf_num])#change txbctrl[0] - adr to value
+        #CANCTRL[0] = self.device_read_data(CANCTRL[0])
+        if (reg_TXBCTRL[buf_num] & 0b01110000) == 0:#check ABTF, MLOA, TXERR, TXREQ, CANCTRL[ABAT]
             print('TXB0CTRL and 0b01110000 = 0')
             
-            reg_TXBCTRL[0] = data = self.device_read_data(adr)
+            reg_TXBCTRL[buf_num] = data = self.device_read_data(TXBCTRL[buf_num])
             data &= 0xC0
             priority=0
             data |= priority
-            print('adr = 0x%X, data = 0x%X'%(adr, self.write_reg_and_check(adr, data)))
+            print('adr = 0x%X, data = 0x%X'%(TXBCTRL[buf_num], self.write_reg_and_check(TXBCTRL[buf_num], data)))
             
-            if (reg_TXBCTRL[0] & (1<<3)) == 0:#check TXREQ 0 - msg sent
+            if (reg_TXBCTRL[buf_num] & (1<<3)) == 0:#check TXREQ 0 - msg sent
                 #TXnIF(CANTINF) doesn't use because TXnIE bits = 0
                 print('TXREEQ = 0')
                 #break#??
-            elif reg_TXBCTRL[0] & (1<<5):#MLOA: Message Lost Arbitration bit: 
+            elif reg_TXBCTRL[buf_num] & (1<<5):#MLOA: Message Lost Arbitration bit: 
                 print('MLOA = 1')
                 #1 =  Message lost arbitration while being sent
                 #0 =  Message did not lose arbitration while being sent
-            elif reg_TXBCTRL[0] & (1<<3): #TXERR: Transmission Error Detected bit
+            elif reg_TXBCTRL[buf_num] & (1<<3): #TXERR: Transmission Error Detected bit
                 #1 =  A bus error occurred while the message was being transmitted
                 # receive interrupts are disabled
                 print('TXERR = 1, transmit error')
-        ID = 0x12F
-        lenght = 7
-        data = [0,1,2,3,4,5,6,7]
+        
         TXBSIDH = [0x31,0x41,0x51]
         TXBSIDL = [0x32,0x42,0x52]
-        self.write_reg_and_check(TXBSIDL[0], (ID & 0x07) << 5)
-        self.write_reg_and_check(TXBSIDH[0], ID>>3)
-                
+        self.write_reg_and_check(TXBSIDL[buf_num], (ID & 0x07) << 5)
+        self.write_reg_and_check(TXBSIDH[buf_num], ID>>3)
+
         TXBDLC = [0x35, 0x45, 0x55]
         TXBnD = [0x36, 0x46, 0x56]
-        
-        self.write_reg_and_check(TXBDLC[0], lenght)
+
+        self.write_reg_and_check(TXBDLC[buf_num], lenght)
         for i in range(lenght):#Tx buffer
-            self.write_reg_and_check((TXBnD[0]+i), data[i]+10)
-        buf = []
-        for i in range(lenght):
-            buf.append(self.device_read_data(TXBnD[0]+i))
-        print('buf = ', buf)
-        self.write_reg_and_check(TXBCTRL[0], 0b00001000)#TXREQ, 0b00 - priority
+            self.write_reg_and_check((TXBnD[buf_num]+i), data[i]+10)
+
+        priority = 3 - buf_num
+        self.write_reg_and_check(TXBCTRL[buf_num], 
+        0b00001000 | (priority & 0x03))#TXREQ, 0bXX - priority
+
         print('CAN msg sent')
         
     def can_rx_func(self):
