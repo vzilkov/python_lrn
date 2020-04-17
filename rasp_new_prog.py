@@ -66,15 +66,27 @@ entry_can_filter.pack(side=TOP)
 label_can_mask.pack(side=TOP)
 entry_can_mask.pack(side=TOP)
 
-#root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenheight()))
-#root.geometry("+{}+{}".format(0, 0))
+#root.attributes('-fullscreen', True)
 
-root.attributes('-fullscreen', True)
+from class_spi_to_can import *
+mcp2515 = spi_to_can_brd_exchange(200)
+mcp2515.set_config_mode(0,0)
+mcp2515.set_normal_mode(500)
 
 def period():
-    can_data.read_data()
+    global mcp2515
+    print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
+    import random
+    data = [random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
+            random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
+            random.randrange(0,0xFF),random.randrange(0,0xFF)]
+    #mcp2515.can_tx_func(0x111,random.randrange(0,9),data)
+    can_buf = mcp2515.can_rx_func()
+    #mcp2515.spi_close()
+    #print('spi closed')
+    can_data.append_can_buf(can_buf['id'], can_buf['length'], can_buf['data'])
     #can_data.print_data()
-
+    
     if checkbutton_var_trace.get():
         textbox.delete('0.0', END)
     else:

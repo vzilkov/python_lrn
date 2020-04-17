@@ -124,10 +124,10 @@ class spi_to_can_brd_exchange:
     def check_errors_rec_tec(self):
         TEC = 0x1C
         REC = 0x1D
-        ELFG = 0x2D
+        EFLG = 0x2D
         errors_rec_tec = [self.device_read_data(REC), 
                         self.device_read_data(TEC),
-                        self.device_read_data(ELFG)]
+                        self.device_read_data(EFLG)]
         return errors_rec_tec
 
     def set_config_mode(self, bit_rate, filter_num):
@@ -141,12 +141,13 @@ class spi_to_can_brd_exchange:
         print('Config mode in config mode')
         # 500 kbps, Bit rate = 500 
         # Sample point = 75%
-        cnf1 = 0b00000011
-        cnf2 = 0b00000000 | 2<<3 | 1
-        cnf3 = 1
-        self.device_write_byte(0x2A, cnf1)
-        self.device_write_byte(0x29, cnf2)
-        self.device_write_byte(0x28, cnf3)
+        if bit_rate == 500:
+            cnf1 = 0#0b00000011
+            cnf2 = 0x89#0b00000000 | 2<<3 | 1
+            cnf3 = 0x02#1
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
 
         #TXRTSCTRL register
         TXRTSCTRL = 0x0D
@@ -218,8 +219,8 @@ class spi_to_can_brd_exchange:
             self.device_write_byte(CANCTRL[0], read_buf)#set to loopback mode
         print('Loopback mode completed')
         
-    def set_normal_mode(self):
-        #self.set_config_mode(500,0)
+    def set_normal_mode(self, baudrate):
+        self.set_config_mode(baudrate,0)
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
         
@@ -234,7 +235,7 @@ class spi_to_can_brd_exchange:
             self.device_write_byte(CANCTRL[0], read_buf)#set to normal mode
         print('Normal mode completed')
         
-    def __check_free_tx_buf(self):#returns number of first free TX buffer
+    def check_free_tx_buf(self):#returns number of first free TX buffer
         TXBCTRL = [0x30,0x40,0x50]
         for buf_num in range(3):
             if (self.device_read_data(TXBCTRL[buf_num]) & (1<<3)) == 0:#TXREQ = 0
@@ -243,7 +244,7 @@ class spi_to_can_brd_exchange:
         return 0xFF
 
     def can_tx_func(self, ID, lenght, *tx_data):#haven't wrote yet
-        buf_num = self.__check_free_tx_buf()
+        buf_num = self.check_free_tx_buf()
         
         TXBCTRL = [0x30,0x40,0x50]
         reg_TXBCTRL = [0,0,0]
@@ -286,7 +287,7 @@ class spi_to_can_brd_exchange:
 
         self.write_reg_and_check(TXBDLC[buf_num], lenght)
         for i in range(lenght):#Tx buffer
-            self.write_reg_and_check((TXBnD[buf_num]+i), tx_data[0][i]+10)
+            self.write_reg_and_check((TXBnD[buf_num]+i), tx_data[0][i])
             
         priority = 0#3 - buf_num
         self.write_reg_and_check(TXBCTRL[buf_num], 
@@ -296,34 +297,38 @@ class spi_to_can_brd_exchange:
         
     def can_rx_func(self):
         RXB0CTRL = 0x60
+        RXB1CTRL = 0x70
         RXBSIDH = [0x61, 0x71]
         RXBSIDL = [0x62, 0x72]
         RXBDLC = [0x65, 0x75]
         RXBD0 = [0x66, 0x76]
         
-        read_rxb0ctrl = self.device_read_data(RXB0CTRL)
-        lenght = self.device_read_data(RXBDLC[0])
-        rcv_data = []
-        for i in range(lenght):
-            rcv_data.append(self.device_read_data(RXBD0[0]+i))
-        ID = (self.device_read_data(RXBSIDH[0])<<3)|self.device_read_data(RXBSIDL[0])>>5
-        print('ID=0x%X, lenght=%d, rcv_data = ' % (ID,lenght), rcv_data)
-        print('CAN msg received')
+        EFLG = 0x2D 
+        data_eflg = self.device_read_data(EFLG)
         
+        CANINTF = 0x2C
+        CANINTE = 0x2B
+        data_canintf = self.device_read_data(CANINTF)
         
-mcp2515 = spi_to_can_brd_exchange(200)
-
-print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
-mcp2515.set_config_mode(0,0)
-#print('loopback mode: ')
-#mcp2515.set_loopback_mode(0)
-mcp2515.set_normal_mode()
-import random
-import time
-data = [random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
-        random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
-        random.randrange(0,0xFF),random.randrange(0,0xFF)]
-mcp2515.can_tx_func(0x111,2,[10,11])
-mcp2515.can_rx_func()
-mcp2515.spi_close()
-print('spi closed')
+        if data_canintf & 0x03:#check bits 6,7
+            self.device_write_byte(EFLG, data_eflg & 0x3F)#6th bit - RX0OVR, 7th bit - RX1OVR
+            
+            if data_canintf & 0x01:#rxb0
+                lenght = self.device_read_data(RXBDLC[0])
+                rcv_data = []
+                for i in range(lenght):
+                    rcv_data.append(self.device_read_data(RXBD0[0]+i))
+                ID = (self.device_read_data(RXBSIDH[0])<<3)|self.device_read_data(RXBSIDL[0])>>5
+                can_data_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+            if data_canintf & 0x02:#rxb1
+                lenght = self.device_read_data(RXBDLC[1])
+                rcv_data = []
+                for i in range(lenght):
+                    rcv_data.append(self.device_read_data(RXBD0[1]+i))
+                ID = (self.device_read_data(RXBSIDH[1])<<3)|self.device_read_data(RXBSIDL[1])>>5
+                can_data_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+            print('CAN msg received, CANINTF = 0x%X, resetted' % data_canintf)
+            self.device_write_byte(CANINTF, data_canintf & 0b00011100)
+            print(can_data_dict)
+            return can_data_dict#create LIST!!!
+        return
