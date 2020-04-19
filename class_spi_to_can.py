@@ -296,8 +296,8 @@ class spi_to_can_brd_exchange:
         print('CAN msg sent')
         
     def can_rx_func(self):
-        RXB0CTRL = 0x60
-        RXB1CTRL = 0x70
+        #RXB0CTRL = 0x60
+        #RXB1CTRL = 0x70
         RXBSIDH = [0x61, 0x71]
         RXBSIDL = [0x62, 0x72]
         RXBDLC = [0x65, 0x75]
@@ -307,11 +307,13 @@ class spi_to_can_brd_exchange:
         data_eflg = self.device_read_data(EFLG)
         
         CANINTF = 0x2C
-        CANINTE = 0x2B
+        #CANINTE = 0x2B
         data_canintf = self.device_read_data(CANINTF)
         
         if data_canintf & 0x03:#check bits 6,7
             self.device_write_byte(EFLG, data_eflg & 0x3F)#6th bit - RX0OVR, 7th bit - RX1OVR
+            
+            import rasp_new_prog
             
             if data_canintf & 0x01:#rxb0
                 lenght = self.device_read_data(RXBDLC[0])
@@ -319,16 +321,15 @@ class spi_to_can_brd_exchange:
                 for i in range(lenght):
                     rcv_data.append(self.device_read_data(RXBD0[0]+i))
                 ID = (self.device_read_data(RXBSIDH[0])<<3)|self.device_read_data(RXBSIDL[0])>>5
-                can_data_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                rasp_new_prog.can_data.append_can_buf(ID, lenght, rcv_data)
+
             if data_canintf & 0x02:#rxb1
                 lenght = self.device_read_data(RXBDLC[1])
                 rcv_data = []
                 for i in range(lenght):
                     rcv_data.append(self.device_read_data(RXBD0[1]+i))
                 ID = (self.device_read_data(RXBSIDH[1])<<3)|self.device_read_data(RXBSIDL[1])>>5
-                can_data_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                rasp_new_prog.can_data.append_can_buf(ID, lenght, rcv_data)
+
             print('CAN msg received, CANINTF = 0x%X, resetted' % data_canintf)
             self.device_write_byte(CANINTF, data_canintf & 0b00011100)
-            print(can_data_dict)
-            return can_data_dict#create LIST!!!
-        return
