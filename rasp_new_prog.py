@@ -1,6 +1,6 @@
-import class_can_data
-from tkinter import *
 
+from tkinter import *
+import class_can_data
 can_data = class_can_data.can_data()
 
 root = Tk()
@@ -76,16 +76,14 @@ mcp2515.set_normal_mode(500)
 def period():
     global mcp2515
     print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
-    import random
-    data = [random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
+    #import random
+    '''data = [random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
             random.randrange(0,0xFF),random.randrange(0,0xFF),random.randrange(0,0xFF),
-            random.randrange(0,0xFF),random.randrange(0,0xFF)]
+            random.randrange(0,0xFF),random.randrange(0,0xFF)]'''
     #mcp2515.can_tx_func(0x111,random.randrange(0,9),data)
-    can_buf = mcp2515.can_rx_func()
+    mcp2515.can_rx_func() #appends rcv data to can_data dictionary
     #mcp2515.spi_close()
     #print('spi closed')
-    can_data.append_can_buf(can_buf['id'], can_buf['length'], can_buf['data'])
-    #can_data.print_data()
     
     if checkbutton_var_trace.get():
         textbox.delete('0.0', END)
