@@ -141,14 +141,72 @@ class spi_to_can_brd_exchange:
         print('Config mode in config mode')
         # 500 kbps, Bit rate = 500 
         # Sample point = 75%
-        if bit_rate == 500:
+        if bit_rate == 10:###
+            cnf1 = 0x0F
+            cnf2 = 0xBF
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 20:###
+            cnf1 = 0x07
+            cnf2 = 0xBF
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 50:###
+            cnf1 = 0x03
+            cnf2 = 0xAC
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 80:###
+            cnf1 = 0x01
+            cnf2 = 0xBF
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 100:###
+            cnf1 = 0x01
+            cnf2 = 0xAC
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 125:###
+            cnf1 = 0x01
+            cnf2 = 0x9A
+            cnf3 = 0x07
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 250:###
+            cnf1 = 0
+            cnf2 = 0xA4
+            cnf3 = 0x04
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        elif bit_rate == 500:###
             cnf1 = 0#0b00000011
             cnf2 = 0x89#0b00000000 | 2<<3 | 1
             cnf3 = 0x02#1
             self.device_write_byte(0x2A, cnf1)
             self.device_write_byte(0x29, cnf2)
             self.device_write_byte(0x28, cnf3)
-
+        elif bit_rate == 1000:###doesn't work, need more freq
+            cnf1 = 0#0b00000011
+            cnf2 = 0x89#0b00000000 | 2<<3 | 1
+            cnf3 = 0x02#1
+            self.device_write_byte(0x2A, cnf1)
+            self.device_write_byte(0x29, cnf2)
+            self.device_write_byte(0x28, cnf3)
+        else:###
+            print('Error') #messageBOX?
+        
         #TXRTSCTRL register
         TXRTSCTRL = 0x0D
         self.device_write_byte(TXRTSCTRL, 0) #I don't use pins for TX req

@@ -14,6 +14,7 @@ frame_tx = LabelFrame(root, text="CAN TX")
 check_btn_var = BooleanVar(value=FALSE)
 check_btn_var_light_up = BooleanVar(value=FALSE)
 checkbutton_var_trace = BooleanVar(value=TRUE)
+checkbutton_var_ext_id = BooleanVar(value=FALSE)
 
 checkbutton_filters_masks = Checkbutton(frame_rx, 
                                         text='Check can filter & mask', 
@@ -22,6 +23,8 @@ checkbutton_filters_masks = Checkbutton(frame_rx,
 checkbutton_light_up = Checkbutton(frame_rx, text='Light up changed data', var= check_btn_var_light_up)
 
 checkbutton_trace = Checkbutton(frame_rx, text='Fixed/Rolling trace', var= checkbutton_var_trace)
+
+check_ext_id_btn = Checkbutton(root, text='Extended ID', var= checkbutton_var_ext_id)#TODO
 
 #Label
 label_can_filter = Label(frame_rx, text='Filter:')
@@ -80,6 +83,9 @@ txt_data4.insert(0, '0x4')
 txt_data5.insert(0, '0x5')
 txt_data6.insert(0, '0x6')
 txt_data7.insert(0, '0x7')
+
+baudrate_val = ttk.Combobox(root, values=[10,20,50,80,100,125,250,500,1000], width=4, font=('Courier New', 14))
+baudrate_val.insert(0,'500')
 
 import class_spi_to_can
 def send_data():
@@ -190,6 +196,10 @@ txt_data6.grid(column=column_var+6, row=row_var+1)
 txt_data7.grid(column=column_var+7, row=row_var+1)
 
 button_tx_can_msg.grid(column=column_var+8, row=4)
+
+baudrate_val.pack(side=TOP)
+
+check_ext_id_btn.pack(side=TOP)
 
 #root.attributes('-fullscreen', True)
 
