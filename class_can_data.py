@@ -1,10 +1,10 @@
 class can_data:
     def __init__(self):
-        self.can_data_dict = {'id': [], 'length': [], 'data': []}
+        self.can_data_dict = {'id': [], 'length': [], 'data': [], 'count_pkgs': []}
 
     def clear(self):
         self.can_data_dict.clear()
-        self.can_data_dict = {'id': [], 'length': [], 'data': []}
+        self.can_data_dict = {'id': [], 'length': [], 'data': [], 'count_pkgs': []}
 
 
 
@@ -14,11 +14,13 @@ class can_data:
             self.can_data_dict['id'][index] = id
             self.can_data_dict['length'][index] = length
             self.can_data_dict['data'][index] = data
-
+            self.can_data_dict['count_pkgs'][index] += 1
+            
         else:
             self.can_data_dict['id'].append(id)
             self.can_data_dict['length'].append(length)
             self.can_data_dict['data'].append(data)
+            self.can_data_dict['count_pkgs'].append(1)
 
     def print_data(self):
         import tabulate
