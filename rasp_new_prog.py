@@ -15,6 +15,7 @@ check_btn_var = BooleanVar(value=FALSE)
 check_btn_var_light_up = BooleanVar(value=FALSE)
 checkbutton_var_trace = BooleanVar(value=TRUE)
 checkbutton_var_ext_id = BooleanVar(value=FALSE)
+check_listen_all_var = BooleanVar(value=FALSE)
 
 checkbutton_filters_masks = Checkbutton(frame_rx, 
                                         text='Check can filter & mask', 
@@ -25,6 +26,8 @@ checkbutton_light_up = Checkbutton(frame_rx, text='Light up changed data', var= 
 checkbutton_trace = Checkbutton(frame_rx, text='Fixed/Rolling trace', var= checkbutton_var_trace)
 
 check_ext_id_btn = Checkbutton(root, text='Extended ID', var= checkbutton_var_ext_id)#TODO
+
+check_listen_all_btn = Checkbutton(root, text='Listen all mode', var= check_listen_all_var)#TODO
 
 #Label
 label_can_filter = Label(frame_rx, text='Filter:')
@@ -65,7 +68,6 @@ label_data7 = Label(frame_tx, text='data7')
 
 vals = [hex(i) for i in range(0xFF+1)]
 
-print(vals)
 txt_data0 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 16))
 txt_data1 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 14))
 txt_data2 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 14))
@@ -86,6 +88,7 @@ txt_data7.insert(0, '0x7')
 
 baudrate_val = ttk.Combobox(root, values=[10,20,50,80,100,125,250,500,1000], width=4, font=('Courier New', 14))
 baudrate_val.insert(0,'500')
+baudrate_val_prev = int(baudrate_val.get(),16)
 
 import class_spi_to_can
 def send_data():
@@ -201,6 +204,8 @@ baudrate_val.pack(side=TOP)
 
 check_ext_id_btn.pack(side=TOP)
 
+check_listen_all_btn.pack(side=TOP)
+
 #root.attributes('-fullscreen', True)
 
 from class_spi_to_can import *
@@ -234,7 +239,13 @@ def period():
     else:
         entry_can_filter.config(state=NORMAL)
         entry_can_mask.config(state=NORMAL)
-
+     
+    global baudrate_val_prev
+    baudrate_current = int(baudrate_val.get())
+    if baudrate_val_prev != baudrate_current:
+        print('Baudrate = %d'%baudrate_current)
+        baudrate_val_prev = baudrate_current
+        #mcp2515.set_normal_mode(baudrate_current)
     #if check_btn_var_light_up.get() is True:#light up button:
 
     root.after(10, period)

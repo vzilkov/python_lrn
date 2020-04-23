@@ -212,7 +212,7 @@ class spi_to_can_brd_exchange:
         self.device_write_byte(TXRTSCTRL, 0) #I don't use pins for TX req
         #Filter registers
         #check check_btn HERE!!!!
-        RXB0CTRL = 0x60
+        RXB0CTRL = 0x64
         RXB1CTRL = 0x70
         self.device_write_byte(RXB0CTRL, 0)# rx filters don't use default
         self.device_write_byte(RXB1CTRL, 0)
