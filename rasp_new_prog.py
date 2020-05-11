@@ -35,9 +35,13 @@ label_can_filter = Label(frame_rx, text='Filter:')
 label_can_mask = Label(frame_rx, text='Mask:')
 
 #entry
-entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF')
+entry_can_filter_string = StringVar()
+entry_can_filter_string_prev = entry_can_filter_string
+entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string)#0x3FFFFFF - 29bit CAN2.0B
 
-entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF')
+entry_can_mask_string = StringVar()
+entry_can_mask_string_prev = entry_can_mask_string
+entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF', textvariable = entry_can_mask_string)
 
 #clear button
 def clear_data():
@@ -220,7 +224,7 @@ def period():
     rcv_can_data = mcp2515.can_rx_func()
     if rcv_can_data != None:
         for i in range(len(rcv_can_data)):
-            can_data.append_can_buf(rcv_can_data[i]['id'],rcv_can_data[i]['length'], rcv_can_data[i]['data'])
+            can_data.append_can_buf(rcv_can_data[i]['id'], rcv_can_data[i]['length'], rcv_can_data[i]['data'])
     #mcp2515.spi_close()
     #print('spi closed')
     
@@ -247,6 +251,18 @@ def period():
         baudrate_val_prev = baudrate_current
         #mcp2515.set_normal_mode(baudrate_current)
     #if check_btn_var_light_up.get() is True:#light up button:
+
+    '''global checkbutton_var_ext_id
+    checkbutton_var_ext_id_cur = checkbutton_var_ext_id.get()
+    if checkbutton_var_ext_id_cur != checkbutton_var_ext_id:
+        print('Check button changed value')
+        checkbutton_var_ext_id = checkbutton_var_ext_id_cur'''
+    
+    global entry_can_filter_string, entry_can_filter_string_prev, entry_can_mask_string, entry_can_mask_string_prev
+    
+    if entry_can_filter_string != entry_can_filter_string_prev:
+        entry_can_filter_string_prev = entry_can_filter_string
+        hex(entry_can_filter_string_prev)
 
     root.after(10, period)
 

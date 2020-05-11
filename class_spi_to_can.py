@@ -376,19 +376,36 @@ class spi_to_can_brd_exchange:
                 rcv_data = []
                 for i in range(lenght):
                     rcv_data.append(self.device_read_data(RXBD0[0]+i))
-                ID = (self.device_read_data(RXBSIDH[0])<<3)|self.device_read_data(RXBSIDL[0])>>5
-                can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
-                can_data_dict.append(can_dict)
-                # can_data.append_can_buf(ID, lenght, rcv_data)
+                
+                RXB0SIDL_data = self.device_read_data(RXBSIDL[0])
+                if RXB0SIDL_data & 0x04: # Ext ID is set
+                    RXB0EID8 = 0x63
+                    RXB0EID0 = 0x64
+                    ID = ((RXB0SIDL_data & 0x03)<<24) | (self.device_read_data(RXB0EID8)<<16) | (self.device_read_data(RXB0EID0)<<8) | (self.device_read_data(RXBSIDH[0])<<3) | (RXB0SIDL_data>>5)
+                    can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                    can_data_dict.append(can_dict)
+                else:
+                    ID = (self.device_read_data(RXBSIDH[0])<<3) | RXB0SIDL_data>>5
+                    can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                    can_data_dict.append(can_dict)
 
             if data_canintf & 0x02:#rxb1
                 lenght = self.device_read_data(RXBDLC[1])
                 rcv_data = []
                 for i in range(lenght):
                     rcv_data.append(self.device_read_data(RXBD0[1]+i))
-                ID = (self.device_read_data(RXBSIDH[1])<<3)|self.device_read_data(RXBSIDL[1])>>5
-                can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
-                can_data_dict.append(can_dict)
+                
+                RXB1SIDL_data = self.device_read_data(RXBSIDL[1])
+                if RXB1SIDL_data & 0x04: # Ext ID is set
+                    RXB1EID8 = 0x73
+                    RXB1EID0 = 0x74
+                    ID = ((RXB1SIDL_data & 0x03)<<24) | (self.device_read_data(RXB1EID8)<<16) | (self.device_read_data(RXB1EID0)<<8) | (self.device_read_data(RXBSIDH[1])<<3) | (RXB1SIDL_data>>5)
+                    can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                    can_data_dict.append(can_dict)
+                else:
+                    ID = (self.device_read_data(RXBSIDH[1])<<3)|self.device_read_data(RXBSIDL[1])>>5
+                    can_dict = {'id': ID, 'length': lenght, 'data': rcv_data}
+                    can_data_dict.append(can_dict)
 
             print('CAN msg received, CANINTF = 0x%X, resetted' % data_canintf)
             self.device_write_byte(CANINTF, data_canintf & 0b00011100)
