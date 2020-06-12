@@ -213,7 +213,7 @@ check_listen_all_btn.pack(side=TOP)
 #root.attributes('-fullscreen', True)
 
 from class_spi_to_can import *
-mcp2515 = spi_to_can_brd_exchange(1500)
+mcp2515 = spi_to_can_brd_exchange(5000)
 mcp2515.set_config_mode(0,0)
 mcp2515.set_normal_mode(500)
 
@@ -224,7 +224,7 @@ def period():
     rcv_can_data = mcp2515.can_rx_func()
     if rcv_can_data != None:
         for i in range(len(rcv_can_data)):
-            can_data.append_can_buf(rcv_can_data[i]['id'], rcv_can_data[i]['length'], rcv_can_data[i]['data'])
+            can_data.append_can_buf(hex(rcv_can_data[i]['id']), rcv_can_data[i]['length'], (rcv_can_data[i]['data']))
     #mcp2515.spi_close()
     #print('spi closed')
     
@@ -240,10 +240,14 @@ def period():
     if check_btn_var.get() is False: #if checkbtn pressed
         entry_can_filter.config(state=DISABLED)
         entry_can_mask.config(state=DISABLED)
+        mcp2515.set_mask(0)
+        mcp2515.set_filter(0)
     else:
         entry_can_filter.config(state=NORMAL)
         entry_can_mask.config(state=NORMAL)
-     
+        mcp2515.set_mask(7)
+        mcp2515.set_filter(7)
+        
     global baudrate_val_prev
     baudrate_current = int(baudrate_val.get())
     if baudrate_val_prev != baudrate_current:
@@ -257,6 +261,8 @@ def period():
     if checkbutton_var_ext_id_cur != checkbutton_var_ext_id:
         print('Check button changed value')
         checkbutton_var_ext_id = checkbutton_var_ext_id_cur'''
+    #333933 - pc, 329037 - rasp, counts send-rcv data, rcv percentage is 98.5%
+    #121192 - pc, 120318 - rasp, counts send-rcv data, rcv percentage is 99.3%
     
     global entry_can_filter_string, entry_can_filter_string_prev, entry_can_mask_string, entry_can_mask_string_prev
     
@@ -264,7 +270,7 @@ def period():
         entry_can_filter_string_prev = entry_can_filter_string
         hex(entry_can_filter_string_prev)
 
-    root.after(10, period)
+    root.after(15, period)
 
-root.after(300, period)
+root.after(150, period)
 root.mainloop()

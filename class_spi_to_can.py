@@ -197,7 +197,7 @@ class spi_to_can_brd_exchange:
             self.device_write_byte(0x2A, cnf1)
             self.device_write_byte(0x29, cnf2)
             self.device_write_byte(0x28, cnf3)
-        elif bit_rate == 1000:###doesn't work, need more freq
+        elif bit_rate == 1000:
             cnf1 = 0
             cnf2 = 0x80
             cnf3 = 0x01
@@ -235,8 +235,9 @@ class spi_to_can_brd_exchange:
         RXF5SIDH = 0x18
         RXF5SIDL = 0x19
 
-        self.device_write_byte(RXF0SIDH, 0)
-        self.device_write_byte(RXF0SIDL, 0)
+        #self.device_write_byte(RXF0SIDH, 0)
+        #self.device_write_byte(RXF0SIDL, 0)
+        self.set_filter(0)
         
         RXF0EID8 = 0x02
         RXF0EID0 = 0x03
@@ -248,12 +249,60 @@ class spi_to_can_brd_exchange:
         RXM0SIDL = 0x21
         RXM1SIDH = 0x24
         RXM1SIDL = 0x25
-        self.device_write_byte(RXM0SIDH, 0)
-        self.device_write_byte(RXM0SIDL, 0)
-        self.device_write_byte(RXM1SIDH, 0)
-        self.device_write_byte(RXM1SIDL, 0)
+        
+        #self.device_write_byte(RXM0SIDH, 0)
+        #self.device_write_byte(RXM0SIDL, 0)
+        
+        #self.device_write_byte(RXM1SIDH, 0)
+        #self.device_write_byte(RXM1SIDL, 0)
+        
+        self.set_mask(0)
+        
+        
         print('Config mode in config mode completed')
+ 
+    def set_mask(self, mask_val):
+        #Mask registers
+        RXM0SIDH = 0x20
+        RXM0SIDL = 0x21
+        RXM1SIDH = 0x24
+        RXM1SIDL = 0x25
+        buf = (mask_val<<5) & 0xE0
+        self.device_write_byte(RXM0SIDL, buf)
+        self.device_write_byte(RXM1SIDL, buf)
+        
+        buf = (mask_val>>3) & 0x1F
+        self.device_write_byte(RXM0SIDH, buf)
+        self.device_write_byte(RXM1SIDH, buf)
+        
+        print('Mask value has setted')
+        
+    def set_filter(self, filter_value):
+        #Filter registers
+        RXF0SIDH = 0x00
+        RXF0SIDL = 0x01
 
+        RXF1SIDH = 0x04
+        RXF1SIDL = 0x05
+
+        RXF2SIDH = 0x08
+        RXF2SIDL = 0x09
+
+        RXF3SIDH = 0x10
+        RXF3SIDL = 0x11
+
+        RXF4SIDH = 0x14
+        RXF4SIDL = 0x15
+
+        RXF5SIDH = 0x18
+        RXF5SIDL = 0x19
+        
+        buf = (filter_value<<5) & 0xE0
+        self.device_write_byte(RXF0SIDL, buf)
+        buf = (filter_value>>3) & 0x1F
+        self.device_write_byte(RXF0SIDH, buf)
+        print('Filter value has setted')
+    
     def set_listen_only_mode(self, filter_num):
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
@@ -301,7 +350,7 @@ class spi_to_can_brd_exchange:
                 return buf_num
         return 0xFF
 
-    def can_tx_func(self, ID, lenght, *tx_data):#haven't wrote yet
+    def can_tx_func(self, ID, lenght, *tx_data):
         buf_num = self.check_free_tx_buf()
         
         TXBCTRL = [0x30,0x40,0x50]
