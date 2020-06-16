@@ -12,6 +12,8 @@ frame_tx = LabelFrame(root, text="CAN TX")
 
 #buttons
 check_btn_var = BooleanVar(value=FALSE)
+check_btn_var_prev = check_btn_var.get()
+
 check_btn_var_light_up = BooleanVar(value=FALSE)
 checkbutton_var_trace = BooleanVar(value=TRUE)
 checkbutton_var_ext_id = BooleanVar(value=FALSE)
@@ -36,12 +38,14 @@ label_can_mask = Label(frame_rx, text='Mask:')
 
 #entry
 entry_can_filter_string = StringVar()
-entry_can_filter_string_prev = entry_can_filter_string
-entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string)#0x3FFFFFF - 29bit CAN2.0B
+
+entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string, state=DISABLED)#0x3FFFFFF - 29bit CAN2.0B
+entry_can_filter_string_prev = entry_can_filter_string.get()
+
 
 entry_can_mask_string = StringVar()
-entry_can_mask_string_prev = entry_can_mask_string
-entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF', textvariable = entry_can_mask_string)
+entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF', textvariable = entry_can_mask_string, state=DISABLED)
+entry_can_mask_string_prev = entry_can_mask_string.get()
 
 #clear button
 def clear_data():
@@ -212,65 +216,100 @@ check_listen_all_btn.pack(side=TOP)
 
 #root.attributes('-fullscreen', True)
 
+
+
 from class_spi_to_can import *
-mcp2515 = spi_to_can_brd_exchange(5000)
-mcp2515.set_config_mode(0,0)
-mcp2515.set_normal_mode(500)
+mcp2515 = spi_to_can_brd_exchange(1000)
+mcp2515.set_config_mode()
+mcp2515.set_baudrate(500)
+mcp2515.set_normal_mode()
+
+def change_filter(filter_val):
+    global mcp2515
+    mcp2515.set_config_mode()
+    mcp2515.set_filter(filter_val)
+    mcp2515.set_normal_mode()
+    
+def change_mask(mask_val):
+    global mcp2515
+    mcp2515.set_config_mode()
+    mcp2515.set_mask(mask_val)
+    mcp2515.set_normal_mode()
 
 def period():
-    global mcp2515
+ #global mcp2515
     
-    #print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
-    rcv_can_data = mcp2515.can_rx_func()
-    if rcv_can_data != None:
-        for i in range(len(rcv_can_data)):
-            can_data.append_can_buf(hex(rcv_can_data[i]['id']), rcv_can_data[i]['length'], (rcv_can_data[i]['data']))
-    #mcp2515.spi_close()
-    #print('spi closed')
+ #print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
+ rcv_can_data = mcp2515.can_rx_func()
+ if rcv_can_data != None:
+     for i in range(len(rcv_can_data)):
+         can_data.append_can_buf(hex(rcv_can_data[i]['id']), rcv_can_data[i]['length'], (rcv_can_data[i]['data']))
     
-    if checkbutton_var_trace.get():
-        textbox.delete('0.0', END)
-    else:
-        import datetime
-        textbox.insert('0.0', datetime.datetime.now())
+ if checkbutton_var_trace.get():
+  textbox.delete('0.0', END)
+ else:
+  import datetime
+  textbox.insert('0.0', datetime.datetime.now())
     
-    import tabulate
-    textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
-    
-    if check_btn_var.get() is False: #if checkbtn pressed
-        entry_can_filter.config(state=DISABLED)
-        entry_can_mask.config(state=DISABLED)
-        mcp2515.set_mask(0)
-        mcp2515.set_filter(0)
-    else:
-        entry_can_filter.config(state=NORMAL)
-        entry_can_mask.config(state=NORMAL)
-        mcp2515.set_mask(7)
-        mcp2515.set_filter(7)
-        
-    global baudrate_val_prev
-    baudrate_current = int(baudrate_val.get())
-    if baudrate_val_prev != baudrate_current:
-        print('Baudrate = %d'%baudrate_current)
-        baudrate_val_prev = baudrate_current
-        #mcp2515.set_normal_mode(baudrate_current)
-    #if check_btn_var_light_up.get() is True:#light up button:
+ import tabulate
+ textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
+ 
+ #change_mask_and_filter(7,7)
+ 
+ global check_btn_var_prev, check_btn_var
+ if check_btn_var_prev != check_btn_var.get():
+  check_btn_var_prev = check_btn_var.get()
+  print('check btn changed state')
+  
+  if check_btn_var_prev == False: #if checkbtn pressed
+   entry_can_filter.config(state=DISABLED)
+   entry_can_mask.config(state=DISABLED)
+   print('Check btn unpressed')
+   change_mask(0)
+   change_filter(0)
+            
+  else:
+   entry_can_filter.config(state=NORMAL)
+   entry_can_mask.config(state=NORMAL)
+   print('Check btn pressed')
+   
+   global entry_can_filter_string, entry_can_filter_string_prev, entry_can_mask_string, entry_can_mask_string_prev
+  if entry_can_filter_string.get() != entry_can_filter_string_prev:
+   entry_can_filter_string_prev = entry_can_filter_string.get()
+  try: 
+   filter_hex = (int(entry_can_filter_string_prev, 16))
+   print('Filter val', (hex(filter_hex)))
+   change_filter(filter_hex)
+  except ValueError:
+   print('Wrong entered filter value, not HEX')
+   
+  if entry_can_mask_string.get() != entry_can_mask_string_prev:
+    entry_can_mask_string_prev = entry_can_mask_string.get()
+    try: 
+        mask_hex = (int(entry_can_mask_string_prev, 16))
+        print('Filter val', hex(mask_hex))
+        change_mask(mask_hex)
+    except ValueError:
+        print('Wrong entered mask value, not HEX')    
 
-    '''global checkbutton_var_ext_id
-    checkbutton_var_ext_id_cur = checkbutton_var_ext_id.get()
-    if checkbutton_var_ext_id_cur != checkbutton_var_ext_id:
-        print('Check button changed value')
-        checkbutton_var_ext_id = checkbutton_var_ext_id_cur'''
+        
+ global baudrate_val_prev
+ baudrate_current = int(baudrate_val.get())
+ if baudrate_val_prev != baudrate_current:
+  print('Baudrate = %d'%baudrate_current)
+  baudrate_val_prev = baudrate_current
+  #mcp2515.set_normal_mode(baudrate_current)
+  #if check_btn_var_light_up.get() is True:#light up button:
+
+ '''global checkbutton_var_ext_id
+ checkbutton_var_ext_id_cur = checkbutton_var_ext_id.get()
+ if checkbutton_var_ext_id_cur != checkbutton_var_ext_id:
+  print('Check button changed value')
+  checkbutton_var_ext_id = checkbutton_var_ext_id_cur'''
     #333933 - pc, 329037 - rasp, counts send-rcv data, rcv percentage is 98.5%
     #121192 - pc, 120318 - rasp, counts send-rcv data, rcv percentage is 99.3%
-    
-    global entry_can_filter_string, entry_can_filter_string_prev, entry_can_mask_string, entry_can_mask_string_prev
-    
-    if entry_can_filter_string != entry_can_filter_string_prev:
-        entry_can_filter_string_prev = entry_can_filter_string
-        hex(entry_can_filter_string_prev)
 
-    root.after(15, period)
+ root.after(20, period)
 
 root.after(150, period)
 root.mainloop()

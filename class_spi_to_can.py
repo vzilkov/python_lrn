@@ -129,16 +129,123 @@ class spi_to_can_brd_exchange:
                         self.device_read_data(TEC),
                         self.device_read_data(EFLG)]
         return errors_rec_tec
+    
+    def __set_mask(self, mask_val):
+        #Mask registers
+        RXM0SIDH = 0x20
+        RXM0SIDL = 0x21
+        RXM1SIDH = 0x24
+        RXM1SIDL = 0x25
+        buf = (mask_val<<5) & 0xE0
+        self.device_write_byte(RXM0SIDL, buf)
+        self.device_write_byte(RXM1SIDL, buf)
 
-    def set_config_mode(self, bit_rate, filter_num):
+        buf = (mask_val>>3) & 0x1F
+        self.device_write_byte(RXM0SIDH, buf)
+        self.device_write_byte(RXM1SIDH, buf)
+
+        print('Mask value has setted')
+        
+    def __set_filter(self, filter_value):
+        #Filter registers
+        RXF0SIDH = 0x00
+        RXF0SIDL = 0x01
+
+        RXF1SIDH = 0x04
+        RXF1SIDL = 0x05
+
+        RXF2SIDH = 0x08
+        RXF2SIDL = 0x09
+
+        RXF3SIDH = 0x10
+        RXF3SIDL = 0x11
+
+        RXF4SIDH = 0x14
+        RXF4SIDL = 0x15
+
+        RXF5SIDH = 0x18
+        RXF5SIDL = 0x19
+
+        buf = (filter_value<<5) & 0xE0
+        self.device_write_byte(RXF0SIDL, buf)
+        buf = (filter_value>>3) & 0x1F
+        self.device_write_byte(RXF0SIDH, buf)
+        print('Filter value has setted')
+    
+    def set_config_mode(self):
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
-        while self.device_read_data(CANSTAT[0]) & 0x80 != 0x80:
-            read_buf = self.device_read_data([CANCTRL[0]])
-            read_buf &= 0x1F
-            read_buf |= 0x80
-            self.device_write_byte(CANCTRL[0], [read_buf])#set to config mode
-        print('Config mode in config mode')
+        count = 0
+        for i in CANSTAT:
+            #print('CANSTAT',hex(i),'val=',hex(self.device_read_data(i)), 'count=',count)
+            while self.device_read_data(i) & 0xE0 != 0x80:
+                read_buf = self.device_read_data(CANCTRL[count])
+                read_buf &= 0x1F
+                read_buf |= 0x80
+                self.device_write_byte(CANCTRL[count], read_buf)#set to config mode
+            count += 1
+        print('Config mode setted')
+                
+        #TXRTSCTRL register
+        TXRTSCTRL = 0x0D
+        self.device_write_byte(TXRTSCTRL, 0) #I don't use pins for TX req
+        #Filter registers
+        #check check_btn HERE!!!!
+        
+        #RXB0CTRL = 0x64 #Turn filters/masks off (0x60)
+        #RXB1CTRL = 0x70
+        RXB0CTRL = 0x00
+        RXB1CTRL = 0x00
+        self.device_write_byte(RXB0CTRL, 0)# rx filters use by default
+        self.device_write_byte(RXB1CTRL, 0)
+
+        RXF0SIDH = 0x00
+        RXF0SIDL = 0x01
+
+        RXF1SIDH = 0x04
+        RXF1SIDL = 0x05
+
+        RXF2SIDH = 0x08
+        RXF2SIDL = 0x09
+
+        RXF3SIDH = 0x10
+        RXF3SIDL = 0x11
+
+        RXF4SIDH = 0x14
+        RXF4SIDL = 0x15
+
+        RXF5SIDH = 0x18
+        RXF5SIDL = 0x19
+
+        #self.device_write_byte(RXF0SIDH, 0)
+        #self.device_write_byte(RXF0SIDL, 0)
+        
+        RXF0EID8 = 0x02
+        RXF0EID0 = 0x03
+        self.device_write_byte(RXF0EID8, 0)
+        self.device_write_byte(RXF0EID0, 0)
+
+        #Mask registers
+        RXM0SIDH = 0x20
+        RXM0SIDL = 0x21
+        RXM1SIDH = 0x24
+        RXM1SIDL = 0x25
+        
+        #self.device_write_byte(RXM0SIDH, 0)
+        #self.device_write_byte(RXM0SIDL, 0)
+        
+        #self.device_write_byte(RXM1SIDH, 0)
+        #self.device_write_byte(RXM1SIDL, 0)
+        
+        #self.set_mask_and_filter(0,0)
+        self.__set_filter(0)
+        self.__set_mask(0)
+        print('Config mode function comleted')
+        for i in CANSTAT:
+            print('CANSTAT',hex(i),'val=',hex(self.device_read_data(i)))
+        
+    
+    def set_baudrate(self, bit_rate):
         # 500 kbps, Bit rate = 500 
         # Sample point = 75%
         if bit_rate == 10:###
@@ -207,106 +314,26 @@ class spi_to_can_brd_exchange:
         else:###
             print('Error') #messageBOX?
         
-        #TXRTSCTRL register
-        TXRTSCTRL = 0x0D
-        self.device_write_byte(TXRTSCTRL, 0) #I don't use pins for TX req
-        #Filter registers
-        #check check_btn HERE!!!!
-        RXB0CTRL = 0x64
-        RXB1CTRL = 0x70
-        self.device_write_byte(RXB0CTRL, 0)# rx filters don't use default
-        self.device_write_byte(RXB1CTRL, 0)
-
-        RXF0SIDH = 0x00
-        RXF0SIDL = 0x01
-
-        RXF1SIDH = 0x04
-        RXF1SIDL = 0x05
-
-        RXF2SIDH = 0x08
-        RXF2SIDL = 0x09
-
-        RXF3SIDH = 0x10
-        RXF3SIDL = 0x11
-
-        RXF4SIDH = 0x14
-        RXF4SIDL = 0x15
-
-        RXF5SIDH = 0x18
-        RXF5SIDL = 0x19
-
-        #self.device_write_byte(RXF0SIDH, 0)
-        #self.device_write_byte(RXF0SIDL, 0)
-        self.set_filter(0)
+    def set_mask_and_filter(self, mask_val, filter_value):
+        #self.set_config_mode()
+        self.__set_filter(filter_value)
+        self.__set_mask(mask_val)
+        #self.set_normal_mode()
         
-        RXF0EID8 = 0x02
-        RXF0EID0 = 0x03
-        self.device_write_byte(RXF0EID8, 0)
-        self.device_write_byte(RXF0EID0, 0)
-
-        #Mask registers
-        RXM0SIDH = 0x20
-        RXM0SIDL = 0x21
-        RXM1SIDH = 0x24
-        RXM1SIDL = 0x25
+    def set_filter(self, filter_val):
+        #self.set_config_mode()
+        self.__set_filter(filter_val)
+        #self.set_normal_mode()
         
-        #self.device_write_byte(RXM0SIDH, 0)
-        #self.device_write_byte(RXM0SIDL, 0)
-        
-        #self.device_write_byte(RXM1SIDH, 0)
-        #self.device_write_byte(RXM1SIDL, 0)
-        
-        self.set_mask(0)
-        
-        
-        print('Config mode in config mode completed')
- 
     def set_mask(self, mask_val):
-        #Mask registers
-        RXM0SIDH = 0x20
-        RXM0SIDL = 0x21
-        RXM1SIDH = 0x24
-        RXM1SIDL = 0x25
-        buf = (mask_val<<5) & 0xE0
-        self.device_write_byte(RXM0SIDL, buf)
-        self.device_write_byte(RXM1SIDL, buf)
+        #self.set_config_mode()
+        self.__set_mask(mask_val)
+        #self.set_normal_mode()
         
-        buf = (mask_val>>3) & 0x1F
-        self.device_write_byte(RXM0SIDH, buf)
-        self.device_write_byte(RXM1SIDH, buf)
-        
-        print('Mask value has setted')
-        
-    def set_filter(self, filter_value):
-        #Filter registers
-        RXF0SIDH = 0x00
-        RXF0SIDL = 0x01
-
-        RXF1SIDH = 0x04
-        RXF1SIDL = 0x05
-
-        RXF2SIDH = 0x08
-        RXF2SIDL = 0x09
-
-        RXF3SIDH = 0x10
-        RXF3SIDL = 0x11
-
-        RXF4SIDH = 0x14
-        RXF4SIDL = 0x15
-
-        RXF5SIDH = 0x18
-        RXF5SIDL = 0x19
-        
-        buf = (filter_value<<5) & 0xE0
-        self.device_write_byte(RXF0SIDL, buf)
-        buf = (filter_value>>3) & 0x1F
-        self.device_write_byte(RXF0SIDH, buf)
-        print('Filter value has setted')
-    
     def set_listen_only_mode(self, filter_num):
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
-        print('Listen only mode')
+        print('Listen only mode not setted')
     
     def set_loopback_mode(self, filter_num):#not tested
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
@@ -326,21 +353,22 @@ class spi_to_can_brd_exchange:
             self.device_write_byte(CANCTRL[0], read_buf)#set to loopback mode
         print('Loopback mode completed')
         
-    def set_normal_mode(self, baudrate):
-        self.set_config_mode(baudrate,0)
+    def set_normal_mode(self):
+        #self.set_config_mode()
+              
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
         
-        while self.device_read_data(CANSTAT[0]) & 0x80 != 0x80:#to config
-            read_buf = self.device_read_data(CANCTRL[0])
-            read_buf &= 0x1F
-            read_buf |= 0x80
-            self.device_write_byte(CANCTRL[0], read_buf)#set to config mode
+        count = 0
+        for i in CANSTAT:
+         while self.device_read_data(i) & 0xE0 != 0x00:
+          read_buf = self.device_read_data(CANCTRL[count]) & 0x1F
+          self.device_write_byte(CANCTRL[count], read_buf)#set to config mode
+          count += 1
         
-        while self.device_read_data(CANSTAT[0]) & 0xE0 != 0x00:#to normal
-            read_buf = self.device_read_data(CANCTRL[0]) & 0x1F
-            self.device_write_byte(CANCTRL[0], read_buf)#set to normal mode
-        print('Normal mode completed')
+        print('Normal mode function completed')
+        for i in CANSTAT:
+            print('CANSTAT',hex(i),'val=',hex(self.device_read_data(i)))
         
     def check_free_tx_buf(self):#returns number of first free TX buffer
         TXBCTRL = [0x30,0x40,0x50]
