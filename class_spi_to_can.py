@@ -243,7 +243,17 @@ class spi_to_can_brd_exchange:
         print('Config mode function comleted')
         for i in CANSTAT:
             print('CANSTAT',hex(i),'val=',hex(self.device_read_data(i)))
-        
+    
+    def check_current_operation_mode(self):
+        CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
+        op_mode = 0xFF
+        count = 0
+        for i in CANSTAT:
+            read_buf = self.device_read_data(CANSTAT[count])
+            read_buf &= 0xE0
+            op_mode |= read_buf
+            count += 1
+        return op_mode
     
     def set_baudrate(self, bit_rate):
         # 500 kbps, Bit rate = 500 

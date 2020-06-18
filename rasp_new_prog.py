@@ -31,19 +31,132 @@ check_ext_id_btn = Checkbutton(root, text='Extended ID', var= checkbutton_var_ex
 
 check_listen_all_btn = Checkbutton(root, text='Listen all mode', var= check_listen_all_var)#TODO
 
+#checkbuttons for mask and filter:
+
+#filter:
+check_filter_list = [BooleanVar(value=FALSE) for i in range(29)]
+
+check_flt0 = Checkbutton(frame_rx, text='0 bit, Filter', var= check_filter_list[0])
+check_flt1 = Checkbutton(frame_rx, text='1', var= check_filter_list[1])
+check_flt2 = Checkbutton(frame_rx, text='2', var= check_filter_list[2])
+check_flt3 = Checkbutton(frame_rx, text='3', var= check_filter_list[3])
+check_flt4 = Checkbutton(frame_rx, text='4', var= check_filter_list[4])
+check_flt5 = Checkbutton(frame_rx, text='5', var= check_filter_list[5])
+check_flt6 = Checkbutton(frame_rx, text='6', var= check_filter_list[6])
+check_flt7 = Checkbutton(frame_rx, text='7', var= check_filter_list[7])
+check_flt8 = Checkbutton(frame_rx, text='8', var= check_filter_list[8])
+check_flt9 = Checkbutton(frame_rx, text='9', var= check_filter_list[9])
+check_flt10 = Checkbutton(frame_rx, text='10', var= check_filter_list[10])
+'''check_flt11_var = BooleanVar(value=FALSE)
+check_flt11 = Checkbutton(frame_rx, text='11 bit', var= check_flt11_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)
+check_flt0_var = BooleanVar(value=FALSE)
+check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)#29 bits'''
+#mask:
+check_mask_list = [BooleanVar(value=FALSE) for i in range(29)]
+
+check_mask0 = Checkbutton(frame_rx, text='0 bit, Mask', var= check_mask_list[0])
+check_mask1 = Checkbutton(frame_rx, text='1', var= check_mask_list[1])
+check_mask2 = Checkbutton(frame_rx, text='2', var= check_mask_list[2])
+check_mask3 = Checkbutton(frame_rx, text='3', var= check_mask_list[3])
+check_mask4 = Checkbutton(frame_rx, text='4', var= check_mask_list[4])
+check_mask5 = Checkbutton(frame_rx, text='5', var= check_mask_list[5])
+check_mask6 = Checkbutton(frame_rx, text='6', var= check_mask_list[6])
+check_mask7 = Checkbutton(frame_rx, text='7', var= check_mask_list[7])
+check_mask8 = Checkbutton(frame_rx, text='8', var= check_mask_list[8])
+check_mask9 = Checkbutton(frame_rx, text='9', var= check_mask_list[9])
+check_mask10 = Checkbutton(frame_rx, text='10', var= check_mask_list[10])
+
+def lock_mask_and_filter():
+    check_mask0.config(state=DISABLED)
+    check_mask1.config(state=DISABLED)
+    check_mask2.config(state=DISABLED)
+    check_mask3.config(state=DISABLED)
+    check_mask4.config(state=DISABLED)
+    check_mask5.config(state=DISABLED)
+    check_mask6.config(state=DISABLED)
+    check_mask7.config(state=DISABLED)
+    check_mask8.config(state=DISABLED)
+    check_mask9.config(state=DISABLED)
+    check_mask10.config(state=DISABLED)
+    
+    check_flt0.config(state=DISABLED)
+    check_flt1.config(state=DISABLED)
+    check_flt2.config(state=DISABLED)
+    check_flt3.config(state=DISABLED)
+    check_flt4.config(state=DISABLED)
+    check_flt5.config(state=DISABLED)
+    check_flt6.config(state=DISABLED)
+    check_flt7.config(state=DISABLED)
+    check_flt8.config(state=DISABLED)
+    check_flt9.config(state=DISABLED)
+    check_flt10.config(state=DISABLED)
+    
+def unlock_mask_and_filter():
+    check_mask0.config(state=NORMAL)
+    check_mask1.config(state=NORMAL)
+    check_mask2.config(state=NORMAL)
+    check_mask3.config(state=NORMAL)
+    check_mask4.config(state=NORMAL)
+    check_mask5.config(state=NORMAL)
+    check_mask6.config(state=NORMAL)
+    check_mask7.config(state=NORMAL)
+    check_mask8.config(state=NORMAL)
+    check_mask9.config(state=NORMAL)
+    check_mask10.config(state=NORMAL)
+    
+    check_flt0.config(state=NORMAL)
+    check_flt1.config(state=NORMAL)
+    check_flt2.config(state=NORMAL)
+    check_flt3.config(state=NORMAL)
+    check_flt4.config(state=NORMAL)
+    check_flt5.config(state=NORMAL)
+    check_flt6.config(state=NORMAL)
+    check_flt7.config(state=NORMAL)
+    check_flt8.config(state=NORMAL)
+    check_flt9.config(state=NORMAL)
+    check_flt10.config(state=NORMAL)
+    
 #Label
 label_can_filter = Label(frame_rx, text='Filter:')
 
 label_can_mask = Label(frame_rx, text='Mask:')
 
 #entry
-entry_can_filter_string = StringVar()
+entry_can_filter_string = StringVar(root, '0')
 
 entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string, state=DISABLED)#0x3FFFFFF - 29bit CAN2.0B
 entry_can_filter_string_prev = entry_can_filter_string.get()
 
 
-entry_can_mask_string = StringVar()
+entry_can_mask_string = StringVar(root, '0')
 entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF', textvariable = entry_can_mask_string, state=DISABLED)
 entry_can_mask_string_prev = entry_can_mask_string.get()
 
@@ -169,14 +282,46 @@ ybar.pack(side=LEFT, fill=BOTH)
 
 frame_rx.pack(side=TOP)
 
-checkbutton_light_up.pack(side=TOP)
+'''checkbutton_light_up.pack(side=TOP)
 checkbutton_trace.pack(side=TOP)
 checkbutton_filters_masks.pack(side=TOP)
 label_can_filter.pack(side=TOP)
 entry_can_filter.pack(side=TOP)
 label_can_mask.pack(side=TOP)
 entry_can_mask.pack(side=TOP)
-clear_btn.pack(side=TOP)
+clear_btn.pack(side=TOP)'''
+checkbutton_light_up.grid(column=0, row=0)
+checkbutton_trace.grid(column=0, row=1)
+checkbutton_filters_masks.grid(column=0, row=2)
+#label_can_filter.pack(side=TOP)
+#entry_can_filter.pack(side=TOP)
+#label_can_mask.pack(side=TOP)
+#entry_can_mask.pack(side=TOP)
+clear_btn.grid(column=0, row=3)
+
+check_flt0.grid(column=11, row=5)
+check_flt1.grid(column=10, row=5)
+check_flt2.grid(column=9, row=5)
+check_flt3.grid(column=8, row=5)
+check_flt4.grid(column=7, row=5)
+check_flt5.grid(column=6, row=5)
+check_flt6.grid(column=5, row=5)
+check_flt7.grid(column=4, row=5)
+check_flt8.grid(column=3, row=5)
+check_flt9.grid(column=2, row=5)
+check_flt10.grid(column=1, row=5)
+
+check_mask0.grid(column=11, row=4)
+check_mask1.grid(column=10, row=4)
+check_mask2.grid(column=9, row=4)
+check_mask3.grid(column=8, row=4)
+check_mask4.grid(column=7, row=4)
+check_mask5.grid(column=6, row=4)
+check_mask6.grid(column=5, row=4)
+check_mask7.grid(column=4, row=4)
+check_mask8.grid(column=3, row=4)
+check_mask9.grid(column=2, row=4)
+check_mask10.grid(column=1, row=4)
 
 frame_tx.pack(side=TOP)
 
@@ -219,7 +364,7 @@ check_listen_all_btn.pack(side=TOP)
 
 
 from class_spi_to_can import *
-mcp2515 = spi_to_can_brd_exchange(1000)
+mcp2515 = spi_to_can_brd_exchange(5000)
 mcp2515.set_config_mode()
 mcp2515.set_baudrate(500)
 mcp2515.set_normal_mode()
@@ -236,80 +381,94 @@ def change_mask(mask_val):
     mcp2515.set_mask(mask_val)
     mcp2515.set_normal_mode()
 
+def change_filter_and_mask(filter_val, mask_val):
+    global mcp2515
+    mcp2515.set_config_mode()
+    mcp2515.set_filter(filter_val)
+    mcp2515.set_mask(mask_val)
+    mcp2515.set_normal_mode()
+#change_filter(2)
+#change_mask(255)
+
+filter_value_prev = 0
+mask_value_prev = 0
+
 def period():
- #global mcp2515
-    
- #print('check_errors_rec_tec', mcp2515.check_errors_rec_tec())
- rcv_can_data = mcp2515.can_rx_func()
- if rcv_can_data != None:
-     for i in range(len(rcv_can_data)):
-         can_data.append_can_buf(hex(rcv_can_data[i]['id']), rcv_can_data[i]['length'], (rcv_can_data[i]['data']))
-    
- if checkbutton_var_trace.get():
-  textbox.delete('0.0', END)
- else:
-  import datetime
-  textbox.insert('0.0', datetime.datetime.now())
-    
- import tabulate
- textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
+    global filter_value_prev, mask_value_prev
+    global mcp2515, check_mask_list, check_filter_list
  
- #change_mask_and_filter(7,7)
- 
- global check_btn_var_prev, check_btn_var
- if check_btn_var_prev != check_btn_var.get():
-  check_btn_var_prev = check_btn_var.get()
-  print('check btn changed state')
-  
-  if check_btn_var_prev == False: #if checkbtn pressed
-   entry_can_filter.config(state=DISABLED)
-   entry_can_mask.config(state=DISABLED)
-   print('Check btn unpressed')
-   change_mask(0)
-   change_filter(0)
-            
-  else:
-   entry_can_filter.config(state=NORMAL)
-   entry_can_mask.config(state=NORMAL)
-   print('Check btn pressed')
-   
-   global entry_can_filter_string, entry_can_filter_string_prev, entry_can_mask_string, entry_can_mask_string_prev
-  if entry_can_filter_string.get() != entry_can_filter_string_prev:
-   entry_can_filter_string_prev = entry_can_filter_string.get()
-  try: 
-   filter_hex = (int(entry_can_filter_string_prev, 16))
-   print('Filter val', (hex(filter_hex)))
-   change_filter(filter_hex)
-  except ValueError:
-   print('Wrong entered filter value, not HEX')
-   
-  if entry_can_mask_string.get() != entry_can_mask_string_prev:
-    entry_can_mask_string_prev = entry_can_mask_string.get()
-    try: 
-        mask_hex = (int(entry_can_mask_string_prev, 16))
-        print('Filter val', hex(mask_hex))
-        change_mask(mask_hex)
-    except ValueError:
-        print('Wrong entered mask value, not HEX')    
+    rcv_can_data = mcp2515.can_rx_func()
+    if rcv_can_data != None:
+        for i in range(len(rcv_can_data)):
+            can_data.append_can_buf(hex(rcv_can_data[i]['id']), rcv_can_data[i]['length'], (rcv_can_data[i]['data']))
+    
+    if checkbutton_var_trace.get():
+        textbox.delete('0.0', END)
+    else:
+        import datetime
+        textbox.insert('0.0', datetime.datetime.now())
+    
+    import tabulate
+    textbox.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
+    
+    Listen_only_mode = 0x60
+    Normal_mode = 0
+    check_mode_var = mcp2515.check_current_operation_mode()
+    if check_mode_var == Normal_mode:
 
+        global check_btn_var_prev, check_btn_var
+      
+        if check_btn_var.get(): #if checkbtn pressed
+            check_btn_var_prev = check_btn_var.get()
+            entry_can_filter.config(state=NORMAL)
+            entry_can_mask.config(state=NORMAL)
+            #print('Check btn pressed')
+            unlock_mask_and_filter()
+                
+        else:
+            entry_can_filter.config(state=DISABLED)
+            entry_can_mask.config(state=DISABLED)
+            lock_mask_and_filter()
+            if check_btn_var_prev != check_btn_var.get():
+                check_btn_var_prev = check_btn_var.get()
+                print('Check btn unpressed')
+                change_filter_and_mask(0,0)
+                filter_value_prev = 0
+                mask_value_prev = 0
+                    
+        count = 0
+        mask_buf = 0
+        filter_buf = 0
+       
+        for i in check_mask_list:
+            mask_buf |= (int(bool(i.get()))<<count)
+            count +=1
+     
+        count = 0
+        for i in check_filter_list:
+            filter_buf |= (int(bool(i.get()))<<count)
+            count +=1
         
- global baudrate_val_prev
- baudrate_current = int(baudrate_val.get())
- if baudrate_val_prev != baudrate_current:
-  print('Baudrate = %d'%baudrate_current)
-  baudrate_val_prev = baudrate_current
-  #mcp2515.set_normal_mode(baudrate_current)
-  #if check_btn_var_light_up.get() is True:#light up button:
+        if (filter_value_prev != filter_buf or mask_value_prev != mask_buf) and check_btn_var_prev == True:
+            filter_value_prev = filter_buf
+            mask_value_prev = mask_buf
+            change_filter_and_mask(filter_buf, mask_buf)
+            
+    elif check_mode_var == Listen_only_mode:
+        mcp2515.set_listen_only_mode()
+            
+    global baudrate_val_prev
+    baudrate_current = int(baudrate_val.get())
+    if baudrate_val_prev != baudrate_current:
+        print('Baudrate = %d'%baudrate_current)
+        baudrate_val_prev = baudrate_current
+        
+    #if check_btn_var_light_up.get() is True:#light up button:
 
- '''global checkbutton_var_ext_id
- checkbutton_var_ext_id_cur = checkbutton_var_ext_id.get()
- if checkbutton_var_ext_id_cur != checkbutton_var_ext_id:
-  print('Check button changed value')
-  checkbutton_var_ext_id = checkbutton_var_ext_id_cur'''
     #333933 - pc, 329037 - rasp, counts send-rcv data, rcv percentage is 98.5%
     #121192 - pc, 120318 - rasp, counts send-rcv data, rcv percentage is 99.3%
 
- root.after(20, period)
+    root.after(20, period)
 
 root.after(150, period)
 root.mainloop()
