@@ -387,16 +387,16 @@ def change_filter_and_mask(filter_val, mask_val):
     mcp2515.set_filter(filter_val)
     mcp2515.set_mask(mask_val)
     mcp2515.set_normal_mode()
-#change_filter(2)
-#change_mask(255)
 
 filter_value_prev = 0
 mask_value_prev = 0
+check_mode_var_prev = 0xFF
 
 def period():
-    global filter_value_prev, mask_value_prev
+    global filter_value_prev, mask_value_prev, check_listen_all_var, check_mode_var_prev
     global mcp2515, check_mask_list, check_filter_list
- 
+    global check_btn_var_prev, check_btn_var
+    
     rcv_can_data = mcp2515.can_rx_func()
     if rcv_can_data != None:
         for i in range(len(rcv_can_data)):
@@ -413,29 +413,26 @@ def period():
     
     Listen_only_mode = 0x60
     Normal_mode = 0
+    
     check_mode_var = mcp2515.check_current_operation_mode()
-    if check_mode_var == Normal_mode:
-
-        global check_btn_var_prev, check_btn_var
-      
-        if check_btn_var.get(): #if checkbtn pressed
-            check_btn_var_prev = check_btn_var.get()
-            entry_can_filter.config(state=NORMAL)
-            entry_can_mask.config(state=NORMAL)
-            #print('Check btn pressed')
-            unlock_mask_and_filter()
-                
-        else:
-            entry_can_filter.config(state=DISABLED)
-            entry_can_mask.config(state=DISABLED)
-            lock_mask_and_filter()
-            if check_btn_var_prev != check_btn_var.get():
-                check_btn_var_prev = check_btn_var.get()
-                print('Check btn unpressed')
-                change_filter_and_mask(0,0)
-                filter_value_prev = 0
-                mask_value_prev = 0
-                    
+    if check_mode_var != Normal_mode and (check_listen_all_var.get() == False):
+        print('Normal Mode entered')
+        if check_mode_var_prev != check_mode_var:
+            mcp2515.set_config_mode()
+            mcp2515.set_normal_mode()
+            check_mode_var_prev = check_mode_var
+    elif (check_mode_var != Listen_only_mode) and (check_listen_all_var.get() == True):
+        print('Listen all Mode entered')
+        if check_mode_var_prev != check_mode_var:
+            mcp2515.set_config_mode()
+            mcp2515.set_listen_only_mode()
+            check_mode_var_prev = check_mode_var
+    
+    if check_mode_var == Normal_mode and check_btn_var.get() == True:
+        check_btn_var_prev = check_btn_var.get()
+        entry_can_filter.config(state=NORMAL)
+        entry_can_mask.config(state=NORMAL)
+        unlock_mask_and_filter()
         count = 0
         mask_buf = 0
         filter_buf = 0
@@ -449,26 +446,32 @@ def period():
             filter_buf |= (int(bool(i.get()))<<count)
             count +=1
         
-        if (filter_value_prev != filter_buf or mask_value_prev != mask_buf) and check_btn_var_prev == True:
+        if filter_value_prev != filter_buf or mask_value_prev != mask_buf:
             filter_value_prev = filter_buf
             mask_value_prev = mask_buf
             change_filter_and_mask(filter_buf, mask_buf)
-            
-    elif check_mode_var == Listen_only_mode:
-        mcp2515.set_listen_only_mode()
-            
+    else:
+        entry_can_filter.config(state=DISABLED)
+        entry_can_mask.config(state=DISABLED)
+        lock_mask_and_filter()
+        if check_btn_var_prev != check_btn_var.get():
+            check_btn_var_prev = check_btn_var.get()
+            change_filter_and_mask(0,0)
+            filter_value_prev = 0
+            mask_value_prev = 0
+    
     global baudrate_val_prev
     baudrate_current = int(baudrate_val.get())
     if baudrate_val_prev != baudrate_current:
         print('Baudrate = %d'%baudrate_current)
         baudrate_val_prev = baudrate_current
-        
+    
     #if check_btn_var_light_up.get() is True:#light up button:
 
     #333933 - pc, 329037 - rasp, counts send-rcv data, rcv percentage is 98.5%
     #121192 - pc, 120318 - rasp, counts send-rcv data, rcv percentage is 99.3%
 
-    root.after(20, period)
+    root.after(10, period)
 
 root.after(150, period)
 root.mainloop()

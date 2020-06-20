@@ -251,7 +251,7 @@ class spi_to_can_brd_exchange:
         for i in CANSTAT:
             read_buf = self.device_read_data(CANSTAT[count])
             read_buf &= 0xE0
-            op_mode |= read_buf
+            op_mode &= read_buf
             count += 1
         return op_mode
     
@@ -340,21 +340,20 @@ class spi_to_can_brd_exchange:
         self.__set_mask(mask_val)
         #self.set_normal_mode()
         
-    def set_listen_only_mode(self, filter_num):
+    def set_listen_only_mode(self):
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
+        count = 0
+        for i in CANSTAT:
+         while self.device_read_data(i) & 0xE0 != 0x60:
+          read_buf = (self.device_read_data(CANCTRL[count]) & 0x1F) | 0x60
+          self.device_write_byte(CANCTRL[count], read_buf)#set to config mode
+          count += 1
         print('Listen only mode not setted')
     
     def set_loopback_mode(self, filter_num):#not tested
         CANCTRL = [0x0F,0x1F,0x2F,0x3F,0x4F,0x5F,0x6F,0x7F]
         CANSTAT = [0x0E,0x1E,0x2E,0x3E,0x4E,0x5E,0x6E,0x7E]
-
-        while self.device_read_data(CANSTAT[0]) & 0x80 != 0x80:#to config
-            read_buf = self.device_read_data(CANCTRL[0])
-            read_buf &= 0x1F
-            read_buf |= 0x80
-            self.device_write_byte(CANCTRL[0], read_buf)#set to config mode
-        print('Config mode in loopback mode')
 
         while self.device_read_data(CANSTAT[0]) & 0x40 != 0x40:#to loopback
             read_buf = self.device_read_data(CANCTRL[0])
