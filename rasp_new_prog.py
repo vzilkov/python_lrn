@@ -8,7 +8,13 @@ root = Tk()
 
 #label frames:
 frame_rx = LabelFrame(root, text="CAN RX", font=('Courier New', 8))
+
+frame_mask = LabelFrame(root, text="Mask", font=('Courier New',8))
+frame_filter = LabelFrame(root, text="Filter", font=('Courier New',8))
+
 frame_tx = LabelFrame(root, text="CAN TX", font=('Courier New', 8))
+
+frame_tx_btn = LabelFrame(root, font=('Courier New', 8))
 
 #buttons
 check_btn_var = BooleanVar(value=FALSE)
@@ -36,17 +42,17 @@ check_listen_all_btn = Checkbutton(root, text='Listen all mode', var= check_list
 #filter:
 check_filter_list = [BooleanVar(value=FALSE) for i in range(29)]
 
-check_flt0 = Checkbutton(frame_rx, text='0 bit, Filter', var= check_filter_list[0], font=('Courier New', 8))
-check_flt1 = Checkbutton(frame_rx, text='1', var= check_filter_list[1], font=('Courier New', 8))
-check_flt2 = Checkbutton(frame_rx, text='2', var= check_filter_list[2], font=('Courier New', 8))
-check_flt3 = Checkbutton(frame_rx, text='3', var= check_filter_list[3], font=('Courier New', 8))
-check_flt4 = Checkbutton(frame_rx, text='4', var= check_filter_list[4], font=('Courier New', 8))
-check_flt5 = Checkbutton(frame_rx, text='5', var= check_filter_list[5], font=('Courier New', 8))
-check_flt6 = Checkbutton(frame_rx, text='6', var= check_filter_list[6], font=('Courier New', 8))
-check_flt7 = Checkbutton(frame_rx, text='7', var= check_filter_list[7], font=('Courier New', 8))
-check_flt8 = Checkbutton(frame_rx, text='8', var= check_filter_list[8], font=('Courier New', 8))
-check_flt9 = Checkbutton(frame_rx, text='9', var= check_filter_list[9], font=('Courier New', 8))
-check_flt10 = Checkbutton(frame_rx, text='10', var= check_filter_list[10], font=('Courier New', 8))
+check_flt0 = Checkbutton(frame_filter, text='0', var= check_filter_list[0], font=('Courier New', 8))
+check_flt1 = Checkbutton(frame_filter, text='1', var= check_filter_list[1], font=('Courier New', 8))
+check_flt2 = Checkbutton(frame_filter, text='2', var= check_filter_list[2], font=('Courier New', 8))
+check_flt3 = Checkbutton(frame_filter, text='3', var= check_filter_list[3], font=('Courier New', 8))
+check_flt4 = Checkbutton(frame_filter, text='4', var= check_filter_list[4], font=('Courier New', 8))
+check_flt5 = Checkbutton(frame_filter, text='5', var= check_filter_list[5], font=('Courier New', 8))
+check_flt6 = Checkbutton(frame_filter, text='6', var= check_filter_list[6], font=('Courier New', 8))
+check_flt7 = Checkbutton(frame_filter, text='7', var= check_filter_list[7], font=('Courier New', 8))
+check_flt8 = Checkbutton(frame_filter, text='8', var= check_filter_list[8], font=('Courier New', 8))
+check_flt9 = Checkbutton(frame_filter, text='9', var= check_filter_list[9], font=('Courier New', 8))
+check_flt10 = Checkbutton(frame_filter, text='10', var= check_filter_list[10], font=('Courier New', 8))
 '''check_flt11_var = BooleanVar(value=FALSE)
 check_flt11 = Checkbutton(frame_rx, text='11 bit', var= check_flt11_var)
 check_flt0_var = BooleanVar(value=FALSE)
@@ -82,17 +88,17 @@ check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)#29 bits'''
 #mask:
 check_mask_list = [BooleanVar(value=FALSE) for i in range(29)]
 
-check_mask0 = Checkbutton(frame_rx, text='0 bit, Mask', var= check_mask_list[0], font=('Courier New', 8))
-check_mask1 = Checkbutton(frame_rx, text='1', var= check_mask_list[1], font=('Courier New', 8))
-check_mask2 = Checkbutton(frame_rx, text='2', var= check_mask_list[2], font=('Courier New', 8))
-check_mask3 = Checkbutton(frame_rx, text='3', var= check_mask_list[3], font=('Courier New', 8))
-check_mask4 = Checkbutton(frame_rx, text='4', var= check_mask_list[4], font=('Courier New', 8))
-check_mask5 = Checkbutton(frame_rx, text='5', var= check_mask_list[5], font=('Courier New', 8))
-check_mask6 = Checkbutton(frame_rx, text='6', var= check_mask_list[6], font=('Courier New', 8))
-check_mask7 = Checkbutton(frame_rx, text='7', var= check_mask_list[7], font=('Courier New', 8))
-check_mask8 = Checkbutton(frame_rx, text='8', var= check_mask_list[8], font=('Courier New', 8))
-check_mask9 = Checkbutton(frame_rx, text='9', var= check_mask_list[9], font=('Courier New', 8))
-check_mask10 = Checkbutton(frame_rx, text='10', var= check_mask_list[10], font=('Courier New', 8))
+check_mask0 = Checkbutton(frame_mask, text='0', var= check_mask_list[0], font=('Courier New', 8))
+check_mask1 = Checkbutton(frame_mask, text='1', var= check_mask_list[1], font=('Courier New', 8))
+check_mask2 = Checkbutton(frame_mask, text='2', var= check_mask_list[2], font=('Courier New', 8))
+check_mask3 = Checkbutton(frame_mask, text='3', var= check_mask_list[3], font=('Courier New', 8))
+check_mask4 = Checkbutton(frame_mask, text='4', var= check_mask_list[4], font=('Courier New', 8))
+check_mask5 = Checkbutton(frame_mask, text='5', var= check_mask_list[5], font=('Courier New', 8))
+check_mask6 = Checkbutton(frame_mask, text='6', var= check_mask_list[6], font=('Courier New', 8))
+check_mask7 = Checkbutton(frame_mask, text='7', var= check_mask_list[7], font=('Courier New', 8))
+check_mask8 = Checkbutton(frame_mask, text='8', var= check_mask_list[8], font=('Courier New', 8))
+check_mask9 = Checkbutton(frame_mask, text='9', var= check_mask_list[9], font=('Courier New', 8))
+check_mask10 = Checkbutton(frame_mask, text='10', var= check_mask_list[10], font=('Courier New', 8))
 
 def lock_mask_and_filter():
     check_mask0.config(state=DISABLED)
@@ -154,7 +160,6 @@ entry_can_filter_string = StringVar(root, '0')
 
 entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string, state=DISABLED, font=('Courier New', 8))#0x3FFFFFF - 29bit CAN2.0B
 entry_can_filter_string_prev = entry_can_filter_string.get()
-
 
 entry_can_mask_string = StringVar(root, '0')
 entry_can_mask = Entry(frame_rx, text='enter values in hex 0-7FF', textvariable = entry_can_mask_string, state=DISABLED)
@@ -259,10 +264,30 @@ def send_data():
     elif length == 0:
         mcp2515.can_tx_func(ID,length,data)
     
-button_tx_can_msg = Button(frame_tx, text='Transmit\nCAN data', 
-                           height=3, font=('Courier New', 8),
+button_tx_can_msg = Button(frame_tx_btn, text='Transmit\nCAN data', 
+                           height=2, font=('Courier New', 8),
                            width=9,
                            command=send_data)
+def set_tx_sett_destroy():
+ destroy()
+
+def set_tx_settings():
+ window = Toplevel(root)
+ window.wm_attributes("-topmost",1)
+ window.title('CAN tx settings')
+ window.geometry("200x200")
+ Label(window, text='can settings label').pack()
+ window.lift(aboveThis=root)
+
+ btn_close = Button(window, command=set_tx_sett_destroy, text='close window')
+ btn_close.pack()
+ #window.destroy()
+
+button_tx_settings = Button(frame_tx_btn, text='Tx setttings', 
+				height=2, 
+				font=('Courier New',8), 
+				width=9, command=set_tx_settings)
+
 
 #place root window to right
 windowWidth = root.winfo_reqwidth()
@@ -281,49 +306,44 @@ textbox.pack(side=LEFT)
 ybar.pack(side=LEFT, fill=BOTH)
 
 frame_rx.pack(side=TOP)
-
-'''checkbutton_light_up.pack(side=TOP)
-checkbutton_trace.pack(side=TOP)
-checkbutton_filters_masks.pack(side=TOP)
-label_can_filter.pack(side=TOP)
-entry_can_filter.pack(side=TOP)
-label_can_mask.pack(side=TOP)
-entry_can_mask.pack(side=TOP)
-clear_btn.pack(side=TOP)'''
-checkbutton_light_up.grid(column=0, row=0)
-checkbutton_trace.grid(column=0, row=1)
-checkbutton_filters_masks.grid(column=0, row=2)
-#label_can_filter.pack(side=TOP)
+frame_mask.pack(side=TOP)
+frame_filter.pack(side=TOP)
+frame_tx_btn.pack(side=TOP)
+'''checkbutton_light_up.pack(side=TOP) checkbutton_trace.pack(side=TOP) checkbutton_filters_masks.pack(side=TOP) 
+label_can_filter.pack(side=TOP) entry_can_filter.pack(side=TOP) label_can_mask.pack(side=TOP) 
+entry_can_mask.pack(side=TOP) clear_btn.pack(side=TOP)''' 
+checkbutton_light_up.grid(column=0, row=0) 
+checkbutton_trace.grid(column=0, row=1) 
+checkbutton_filters_masks.grid(column=0, row=2) 
+label_can_filter.grid(column=0, row=3)
 #entry_can_filter.pack(side=TOP)
 #label_can_mask.pack(side=TOP)
 #entry_can_mask.pack(side=TOP)
 clear_btn.grid(column=0, row=3)
 
-check_flt0.grid(column=11, row=5)
-check_flt1.grid(column=10, row=5)
-check_flt2.grid(column=9, row=5)
-check_flt3.grid(column=8, row=5)
-check_flt4.grid(column=7, row=5)
-check_flt5.grid(column=6, row=5)
-check_flt6.grid(column=5, row=5)
-check_flt7.grid(column=4, row=5)
-check_flt8.grid(column=3, row=5)
-check_flt9.grid(column=2, row=5)
-check_flt10.grid(column=1, row=5)
+check_flt0.grid(column=5, row=7)
+check_flt1.grid(column=4, row=7)
+check_flt2.grid(column=3, row=7)
+check_flt3.grid(column=2, row=7)
+check_flt4.grid(column=1, row=7)
+check_flt5.grid(column=6, row=6)
+check_flt6.grid(column=5, row=6)
+check_flt7.grid(column=4, row=6)
+check_flt8.grid(column=3, row=6)
+check_flt9.grid(column=2, row=6)
+check_flt10.grid(column=1, row=6)
 
-check_mask0.grid(column=11, row=4)
-check_mask1.grid(column=10, row=4)
-check_mask2.grid(column=9, row=4)
-check_mask3.grid(column=8, row=4)
-check_mask4.grid(column=7, row=4)
+check_mask0.grid(column=5, row=5)
+check_mask1.grid(column=4, row=5)
+check_mask2.grid(column=3, row=5)
+check_mask3.grid(column=2, row=5)
+check_mask4.grid(column=1, row=5)
 check_mask5.grid(column=6, row=4)
 check_mask6.grid(column=5, row=4)
 check_mask7.grid(column=4, row=4)
 check_mask8.grid(column=3, row=4)
 check_mask9.grid(column=2, row=4)
 check_mask10.grid(column=1, row=4)
-
-frame_tx.pack(side=TOP)
 
 label_id.grid(column=0, row=1)
 txt_id.grid(column=1, row=1)
@@ -351,8 +371,8 @@ txt_data5.grid(column=column_var+5, row=row_var+1)
 txt_data6.grid(column=column_var+6, row=row_var+1)
 txt_data7.grid(column=column_var+7, row=row_var+1)
 
-button_tx_can_msg.grid(column=column_var+8, row=4)
-
+button_tx_can_msg.grid(column=1, row=0)
+button_tx_settings.grid(column=0,row=0)
 baudrate_val.pack(side=TOP)
 
 check_ext_id_btn.pack(side=TOP)

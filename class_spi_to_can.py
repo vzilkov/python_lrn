@@ -4,7 +4,7 @@ class spi_to_can_brd_exchange:
     GPIO.cleanup()
     def __init__(self, max_speed_khz):
         self.GPIO.setmode(self.GPIO.BCM)
-        self.nCS_pin = 25
+        self.nCS_pin = 12
         self.GPIO.setup(self.nCS_pin, self.GPIO.OUT)
         self.GPIO.output(self.nCS_pin, self.GPIO.HIGH)
         
