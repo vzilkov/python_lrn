@@ -6,8 +6,6 @@ class can_data:
         self.can_data_dict.clear()
         self.can_data_dict = {'id': [], 'length': [], 'data': [], 'count_pkgs': []}
 
-
-
     def append_can_buf(self, id, length, *data):
         if id in self.can_data_dict['id']:
             index = self.can_data_dict['id'].index(id)
