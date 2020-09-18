@@ -264,6 +264,7 @@ def send_data():
     elif length == 0:
         mcp2515.can_tx_func(ID,length,data)
     
+
 button_tx_can_msg = Button(frame_tx_btn, text='Transmit\nCAN data', 
                            height=2, font=('Courier New', 8),
                            width=9,
@@ -297,7 +298,7 @@ positionDown = int(root.winfo_screenheight() - windowHeight)
 
 #textbox & scrollbar:
 ybar = Scrollbar(root, width=30)
-textbox = Text(root, width=50, height=root.winfo_screenheight(), font=('Courier New', 8))
+textbox = Text(root, width=80, height=root.winfo_screenheight(), font=('Courier New', 8))
 ybar.config(command=textbox.yview)
 textbox.config(yscrollcommand=ybar.set)
 
