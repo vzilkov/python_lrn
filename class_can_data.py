@@ -33,10 +33,19 @@ class can_data:
             print(self.can_data_dict['id'][i], self.can_data_dict['length'][i], self.can_data_dict['data'][i])''' 
         print(tabulate.tabulate(self.can_data_dict, headers='keys', tablefmt='grid'))
 
-    '''def read_data(self):
+    def read_data(self):
         import random
         can_data_dict = {'id': random.randrange(0,4), 'length': random.randrange(0,8), 
         'data': 
         [random.randrange(0,10),random.randrange(0,10),random.randrange(0,10),random.randrange(0,10),
         random.randrange(0,10),random.randrange(0,10),random.randrange(0,10),random.randrange(0,10)]}
-        self.append_can_buf(can_data_dict['id'],can_data_dict['length'],can_data_dict['data'])'''
+        self.append_can_buf(can_data_dict['id'],can_data_dict['length'],can_data_dict['data'])
+    
+    def random_data(self):
+        from random import randrange
+        can_data_dict = {'id': randrange(0,0x7FF), 'length': randrange(0,8), 
+        'data': 
+        [randrange(0,0xFF),randrange(0,0xFF),randrange(0,0xFF),randrange(0,0xFF),
+        randrange(0,0xFF),randrange(0,0xFF),randrange(0,0xFF),randrange(0,0xFF)]}
+        can_data_dict['data'] = can_data_dict['data'][:can_data_dict['length']]
+        return can_data_dict
