@@ -71,13 +71,13 @@ while True:
     if(buf['length'] > 0 and buf['length'] <= 8):
         
         print('ID %s Len %d Data' %(format(buf['id'], 'X'), buf['length']),' '.join(format(x, '02X') for x in buf['data']))
-        logging.info('ID %s Len %d Data %s' %(format(buf['id'], 'X'), buf['length'],' '.join(format(x, '02X') for x in buf['data'])))
-        MESSAGE = bytes(str('ID %s Len %d Data %s' %(format(buf['id'], 'X'), buf['length'],' '.join(format(x, '02X') for x in buf['data']))).encode('utf-8'))
+        logging.info('ID: %s L: %d D: %s' %(format(buf['id'], 'X'), buf['length'],' '.join(format(x, '02X') for x in buf['data'])))
+        MESSAGE = bytes(str('ID: %s L: %d D: %s' %(format(buf['id'], 'X'), buf['length'],' '.join(format(x, '02X') for x in buf['data']))).encode('utf-8'))
         sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
     else:
         print('ID %s Len %d' %(format(buf['id'], 'X'), buf['length']))
-        logging.info('ID %s Len %d' %(format(buf['id'], 'X'), buf['length']))
-        MESSAGE = bytes(str('ID %s Len %d' %(format(buf['id'], 'X'), buf['length'])).encode('utf-8'))
+        logging.info('ID: %s L: %d' %(format(buf['id'], 'X'), buf['length']))
+        MESSAGE = bytes(str('ID: %s L: %d' %(format(buf['id'], 'X'), buf['length'])).encode('utf-8'))
         sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
     '''if rcv_can_data != None:
         for i in range(len(rcv_can_data)):
