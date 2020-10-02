@@ -1,45 +1,81 @@
-'''import tkinter
-root = tkinter.Tk()
-textbox = tkinter.Text(root, width=90, height=root.winfo_screenheight(), font=('Courier New', 16))
-textbox.pack(side=tkinter.LEFT)
-#textbox.mark_set("insert", "2.0")
-textbox.insert("@%d,%d" % (8,1), "Hello!!!")
-textbox.insert("@%d,%d" % (4,8), "Bye!!!")
-#textbox.insert('1.0', 'Hello!!!')
-#textbox.insert('10.4', 'Hello!!!')
-root.mainloop()'''
-from tkinter import *
+from PyQt5.uic import loadUi
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QApplication, QDialog
+import sys
 
-root = Tk()
-import tabulate
-import class_can_data
-can_data = class_can_data.can_data()
-text = Text(root)
-text.insert(INSERT, "\nHello, world!\n")
-text.insert(END, "This is a phrase.\n")
-text.insert(END, "Bye bye...")
-text.pack(expand=1, fill=BOTH)
-# adding a tag to a part of text specifying the indices
+class MainWindow(QDialog):
+    def __init__(self):
+        super(MainWindow,self).__init__()
+        loadUi('main.ui', self)
+        
+    def loaddata(self):
+        self.tableWidget.setRowCount(2)
+        row=0
+        self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem("0x7FF"))
+        self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem('0x8'))
+        self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.setItem(row, 9, QtWidgets.QTableWidgetItem('0xFF'))
 
 
-#can_data.append_can_buf(0,0)
-can_data.append_can_buf(1,1,[10,1,2,3,4,5,6,7])
-can_data.append_can_buf(2,2,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(3,3,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(4,4,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(5,5,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(6,6,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(7,7,[0,1,2,3,4,5,6,7])
-can_data.append_can_buf(8,8,[0,1,2,3,4,5,6,7])
+app = QApplication(sys.argv)
+mainwindow = MainWindow()
+widget = QtWidgets.QStackedWidget()
+widget.addWidget(mainwindow)
 
-text.insert('0.0', tabulate.tabulate(can_data.can_data_dict, headers='keys', tablefmt='grid'))
-index = can_data.can_data_dict['id'].index(1)
-for i in range(can_data.can_data_dict['length'][index]):
-    print(i)
-text.tag_add("start", "4.16", "4.17")
-text.tag_config("start", background="blue", foreground="yellow")
-text.tag_add("start", "4.22", "4.23")
-text.tag_config("start", background="blue", foreground="yellow")
-text.tag_add("start", "4.25", "4.26")
-text.tag_config("start", background="blue", foreground="yellow")
-root.mainloop()
+#for i in range(0,10, 1):
+#    mainwindow.tableWidget.setColumnWidth(i,75)
+mainwindow.tableWidget.setFixedWidth(680)
+
+#mainwindow.tableWidget.horizontalHeaderItem(1).setTextAlignment(QtCore.Qt.AlignCenter)
+mainwindow.tableWidget.resizeColumnsToContents()
+from random import randrange
+for i in range(0, 100, 1):
+    row = mainwindow.tableWidget.rowCount()
+    mainwindow.tableWidget.insertRow(row)
+    mainwindow.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem('%X'% randrange(0x200)))
+    mainwindow.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 9, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+    mainwindow.tableWidget.setItem(row, 10, QtWidgets.QTableWidgetItem('%X'% row))
+    
+widget.show()
+try:
+    sys.exit(app.exec_())
+except:
+    print('Exiting')
+'''
+class Ui(QtWidgets.QDialog, form):
+    def __init__(self):
+        super(Ui, self).__init__()
+        self.setupUi(self)
+        self.button1.clicked.connect(self.print_btn_pressed)
+    
+    def print_btn_pressed(self):
+        if(self.checkBox.checkState()):
+            self.rcv_can_msgs.append("ChkBtn true\n")
+        else:
+            #cursor = self.textCursor()
+            #cursor.insertText('Cursor enters text')
+            #cursor.movePosition(QtGui)
+            #print('Anchor position %d'%self.rcv_can_msgs.setTextCursor(0))
+            self.rcv_can_msgs.insertPlainText("ChkBtn false\n")
+
+    def checkBox_pressed(self, txt):
+        print('%s' % txt)
+
+app = QtWidgets.QApplication([])
+main_window = Ui()
+main_window.show()
+sys.exit(app.exec())'''
