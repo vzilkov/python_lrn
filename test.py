@@ -9,18 +9,22 @@ class MainWindow(QDialog):
         loadUi('main.ui', self)
         
     def loaddata(self):
-        self.tableWidget.setRowCount(2)
-        row=0
-        self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem("0x7FF"))
-        self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem('0x8'))
-        self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem('0xFF'))
-        self.tableWidget.setItem(row, 9, QtWidgets.QTableWidgetItem('0xFF'))
+        self.tableWidget.resizeColumnsToContents()
+        from random import randrange
+        for i in range(0, 100, 1):
+            row = mainwindow.tableWidget.rowCount()
+            self.tableWidget.insertRow(row)
+            self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem('%X'% randrange(0x200)))
+            self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 9, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
+            self.tableWidget.setItem(row, 10, QtWidgets.QTableWidgetItem('%X'% row))
 
 
 app = QApplication(sys.argv)
@@ -31,24 +35,7 @@ widget.addWidget(mainwindow)
 #for i in range(0,10, 1):
 #    mainwindow.tableWidget.setColumnWidth(i,75)
 mainwindow.tableWidget.setFixedWidth(680)
-
-#mainwindow.tableWidget.horizontalHeaderItem(1).setTextAlignment(QtCore.Qt.AlignCenter)
-mainwindow.tableWidget.resizeColumnsToContents()
-from random import randrange
-for i in range(0, 100, 1):
-    row = mainwindow.tableWidget.rowCount()
-    mainwindow.tableWidget.insertRow(row)
-    mainwindow.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem('%X'% randrange(0x200)))
-    mainwindow.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 9, QtWidgets.QTableWidgetItem('%X'% randrange(255)))
-    mainwindow.tableWidget.setItem(row, 10, QtWidgets.QTableWidgetItem('%X'% row))
+mainwindow.loaddata()
     
 widget.show()
 try:

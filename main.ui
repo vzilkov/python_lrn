@@ -311,6 +311,19 @@
      <set>AlignCenter</set>
     </property>
    </column>
+   <column>
+    <property name="text">
+     <string notr="true">Status</string>
+    </property>
+    <property name="font">
+     <font>
+      <kerning>false</kerning>
+     </font>
+    </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
+   </column>
   </widget>
  </widget>
  <resources/>
