@@ -1,20 +1,24 @@
 from tkinter import *
 
-root = Tk()
-width = 840
-height = 480
-root.geometry("%dx%d"%(width, height))
-#root.resizable(FALSE, FALSE)
+class mainwindow():
+    def __init__(self):
+        self.root = Tk()
+        width = 900
+        height = 480
+        self.root.geometry("%dx%d"%(width, height))
+        #self.root.resizable(FALSE, FALSE)
+
+root = mainwindow().root
 
 #label frames:
-frame_rx = LabelFrame(root, text="CAN RX", font=('Courier New', 8))
+frame_rx = LabelFrame(root, text="CAN RX")
 
-frame_mask = LabelFrame(root, text="Mask", font=('Courier New',8))
-frame_filter = LabelFrame(root, text="Filter", font=('Courier New',8))
+frame_mask = LabelFrame(root, text="Mask")
+frame_filter = LabelFrame(root, text="Filter")
 
-frame_tx = LabelFrame(root, text="CAN TX", font=('Courier New', 8))
+frame_tx = LabelFrame(root, text="CAN TX")
 
-frame_tx_btn = LabelFrame(root, font=('Courier New', 8), text='Tx frame')
+frame_tx_btn = LabelFrame(root, text='Tx frame')
 
 #buttons
 check_btn_var = BooleanVar(value=FALSE)
@@ -27,32 +31,34 @@ check_listen_all_var = BooleanVar(value=FALSE)
 
 checkbutton_filters_masks = Checkbutton(frame_rx, 
                                         text='Check can filter & mask', 
-                                        var=check_btn_var, font=('Courier New', 8))
+                                        var=check_btn_var)
 
-checkbutton_light_up = Checkbutton(frame_rx, text='Light up changed data', var= check_btn_var_light_up, font=('Courier New', 8))
+checkbutton_light_up = Checkbutton(frame_rx, text='Light up changed data', var= check_btn_var_light_up)
 
-checkbutton_trace = Checkbutton(frame_rx, text='Fixed/Rolling trace', var= checkbutton_var_trace, font=('Courier New', 8))
+checkbutton_trace = Checkbutton(frame_rx, text='Fixed/Rolling trace', var= checkbutton_var_trace)
 
-check_ext_id_btn = Checkbutton(root, text='Extended ID', var= checkbutton_var_ext_id, font=('Courier New', 8))#TODO
+check_ext_id_btn = Checkbutton(root, text='Extended ID', var= checkbutton_var_ext_id)#TODO
 
-check_listen_all_btn = Checkbutton(root, text='Listen all mode', var= check_listen_all_var, font=('Courier New', 8))#TODO
+check_listen_all_btn = Checkbutton(root, text='Listen all mode', var= check_listen_all_var)#TODO
 
 #checkbuttons for mask and filter:
 
 #filter:
-check_filter_list = [BooleanVar(value=FALSE) for i in range(29)]
-
-check_flt0 = Checkbutton(frame_filter, text='0', var= check_filter_list[0], font=('Courier New', 8))
-check_flt1 = Checkbutton(frame_filter, text='1', var= check_filter_list[1], font=('Courier New', 8))
-check_flt2 = Checkbutton(frame_filter, text='2', var= check_filter_list[2], font=('Courier New', 8))
-check_flt3 = Checkbutton(frame_filter, text='3', var= check_filter_list[3], font=('Courier New', 8))
-check_flt4 = Checkbutton(frame_filter, text='4', var= check_filter_list[4], font=('Courier New', 8))
-check_flt5 = Checkbutton(frame_filter, text='5', var= check_filter_list[5], font=('Courier New', 8))
-check_flt6 = Checkbutton(frame_filter, text='6', var= check_filter_list[6], font=('Courier New', 8))
-check_flt7 = Checkbutton(frame_filter, text='7', var= check_filter_list[7], font=('Courier New', 8))
-check_flt8 = Checkbutton(frame_filter, text='8', var= check_filter_list[8], font=('Courier New', 8))
-check_flt9 = Checkbutton(frame_filter, text='9', var= check_filter_list[9], font=('Courier New', 8))
-check_flt10 = Checkbutton(frame_filter, text='10', var= check_filter_list[10], font=('Courier New', 8))
+check_filter_list = [BooleanVar(value=FALSE) for i in range(30)]
+check_filter_list_new = []
+for i in range(30):
+    check_filter_list_new.append(Checkbutton(frame_filter, text='%d'%i, var= check_filter_list[i]))
+'''check_flt0 = Checkbutton(frame_filter, text='0', var= check_filter_list[0])
+check_flt1 = Checkbutton(frame_filter, text='1', var= check_filter_list[1])
+check_flt2 = Checkbutton(frame_filter, text='2', var= check_filter_list[2])
+check_flt3 = Checkbutton(frame_filter, text='3', var= check_filter_list[3])
+check_flt4 = Checkbutton(frame_filter, text='4', var= check_filter_list[4])
+check_flt5 = Checkbutton(frame_filter, text='5', var= check_filter_list[5])
+check_flt6 = Checkbutton(frame_filter, text='6', var= check_filter_list[6])
+check_flt7 = Checkbutton(frame_filter, text='7', var= check_filter_list[7])
+check_flt8 = Checkbutton(frame_filter, text='8', var= check_filter_list[8])
+check_flt9 = Checkbutton(frame_filter, text='9', var= check_filter_list[9])
+check_flt10 = Checkbutton(frame_filter, text='10', var= check_filter_list[10])'''
 '''check_flt11_var = BooleanVar(value=FALSE)
 check_flt11 = Checkbutton(frame_rx, text='11 bit', var= check_flt11_var)
 check_flt0_var = BooleanVar(value=FALSE)
@@ -88,17 +94,17 @@ check_flt0 = Checkbutton(frame_rx, text='0 bit', var= check_flt0_var)#29 bits'''
 #mask:
 check_mask_list = [BooleanVar(value=FALSE) for i in range(29)]
 
-check_mask0 = Checkbutton(frame_mask, text='0', var= check_mask_list[0], font=('Courier New', 8))
-check_mask1 = Checkbutton(frame_mask, text='1', var= check_mask_list[1], font=('Courier New', 8))
-check_mask2 = Checkbutton(frame_mask, text='2', var= check_mask_list[2], font=('Courier New', 8))
-check_mask3 = Checkbutton(frame_mask, text='3', var= check_mask_list[3], font=('Courier New', 8))
-check_mask4 = Checkbutton(frame_mask, text='4', var= check_mask_list[4], font=('Courier New', 8))
-check_mask5 = Checkbutton(frame_mask, text='5', var= check_mask_list[5], font=('Courier New', 8))
-check_mask6 = Checkbutton(frame_mask, text='6', var= check_mask_list[6], font=('Courier New', 8))
-check_mask7 = Checkbutton(frame_mask, text='7', var= check_mask_list[7], font=('Courier New', 8))
-check_mask8 = Checkbutton(frame_mask, text='8', var= check_mask_list[8], font=('Courier New', 8))
-check_mask9 = Checkbutton(frame_mask, text='9', var= check_mask_list[9], font=('Courier New', 8))
-check_mask10 = Checkbutton(frame_mask, text='10', var= check_mask_list[10], font=('Courier New', 8))
+check_mask0 = Checkbutton(frame_mask, text='0', var= check_mask_list[0])
+check_mask1 = Checkbutton(frame_mask, text='1', var= check_mask_list[1])
+check_mask2 = Checkbutton(frame_mask, text='2', var= check_mask_list[2])
+check_mask3 = Checkbutton(frame_mask, text='3', var= check_mask_list[3])
+check_mask4 = Checkbutton(frame_mask, text='4', var= check_mask_list[4])
+check_mask5 = Checkbutton(frame_mask, text='5', var= check_mask_list[5])
+check_mask6 = Checkbutton(frame_mask, text='6', var= check_mask_list[6])
+check_mask7 = Checkbutton(frame_mask, text='7', var= check_mask_list[7])
+check_mask8 = Checkbutton(frame_mask, text='8', var= check_mask_list[8])
+check_mask9 = Checkbutton(frame_mask, text='9', var= check_mask_list[9])
+check_mask10 = Checkbutton(frame_mask, text='10', var= check_mask_list[10])
 
 def lock_mask_and_filter():
     check_mask0.config(state=DISABLED)
@@ -151,14 +157,14 @@ def unlock_mask_and_filter():
     check_flt10.config(state=NORMAL)
     
 #Label
-label_can_filter = Label(frame_rx, text='Filter:', font=('Courier New', 8))
+label_can_filter = Label(frame_rx, text='Filter:')
 
-label_can_mask = Label(frame_rx, text='Mask:', font=('Courier New', 8))
+label_can_mask = Label(frame_rx, text='Mask:')
 
 #entry
 entry_can_filter_string = StringVar(root, '0')
 
-entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string, state=DISABLED, font=('Courier New', 8))#0x3FFFFFF - 29bit CAN2.0B
+entry_can_filter = Entry(frame_rx, text='enter vals in hex 0-7FF', textvariable = entry_can_filter_string, state=DISABLED)#0x3FFFFFF - 29bit CAN2.0B
 entry_can_filter_string_prev = entry_can_filter_string.get()
 
 entry_can_mask_string = StringVar(root, '0')
@@ -169,39 +175,39 @@ entry_can_mask_string_prev = entry_can_mask_string.get()
 def clear_data():
     print("Clear data")
     
-clear_btn = Button(frame_rx, text='Reset RX data', command=clear_data, font=('Courier New', 8))
+clear_btn = Button(frame_rx, text='Reset RX data', command=clear_data)
 
-label_id = Label(frame_tx, text='ID (hex):', height=4, font=('Courier New', 8))
-label_len = Label(frame_tx, text='length:', height=4, font=('Courier New', 8))
-#label_data = Label(frame_tx, text='data:', height=4, font=('Courier New', 8))
-txt_id = Entry(frame_tx, width=7, font=('Courier New', 8))
+label_id = Label(frame_tx, text='ID (hex):', height=4)
+label_len = Label(frame_tx, text='length:', height=4)
+#label_data = Label(frame_tx, text='data:', height=4)
+txt_id = Entry(frame_tx, width=7)
 txt_id.insert(0, '0')
 
 from tkinter import ttk
 txt_len_var = 0
-combobox_length = ttk.Combobox(frame_tx, values=[0,1,2,3,4,5,6,7,8], textvariable=txt_len_var, width=2, font=('Courier New', 8))
+combobox_length = ttk.Combobox(frame_tx, values=[0,1,2,3,4,5,6,7,8], textvariable=txt_len_var, width=2)
 combobox_length.set(8)
 txt_len = Entry(frame_tx, width=3, justify=CENTER)
 
-label_data0 = Label(frame_tx, text='data0', font=('Courier New', 8))
-label_data1 = Label(frame_tx, text='data1', font=('Courier New', 8))
-label_data2 = Label(frame_tx, text='data2', font=('Courier New', 8))
-label_data3 = Label(frame_tx, text='data3', font=('Courier New', 8))
-label_data4 = Label(frame_tx, text='data4', font=('Courier New', 8))
-label_data5 = Label(frame_tx, text='data5', font=('Courier New', 8))
-label_data6 = Label(frame_tx, text='data6', font=('Courier New', 8))
-label_data7 = Label(frame_tx, text='data7', font=('Courier New', 8))
+label_data0 = Label(frame_tx, text='data0')
+label_data1 = Label(frame_tx, text='data1')
+label_data2 = Label(frame_tx, text='data2')
+label_data3 = Label(frame_tx, text='data3')
+label_data4 = Label(frame_tx, text='data4')
+label_data5 = Label(frame_tx, text='data5')
+label_data6 = Label(frame_tx, text='data6')
+label_data7 = Label(frame_tx, text='data7')
 
 vals = [hex(i) for i in range(0xFF+1)]
 
-txt_data0 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data1 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data2 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data3 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data4 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data5 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data6 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
-txt_data7 = ttk.Combobox(frame_tx, values=vals, width=5, font=('Courier New', 8))
+txt_data0 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data1 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data2 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data3 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data4 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data5 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data6 = ttk.Combobox(frame_tx, values=vals, width=5)
+txt_data7 = ttk.Combobox(frame_tx, values=vals, width=5)
 
 txt_data0.insert(0, '0x0')
 txt_data1.insert(0, '0x1')
@@ -212,7 +218,7 @@ txt_data5.insert(0, '0x5')
 txt_data6.insert(0, '0x6')
 txt_data7.insert(0, '0x7')
 
-baudrate_val = ttk.Combobox(root, values=[10,20,50,80,100,125,250,500,1000], width=4, font=('Courier New', 8))
+baudrate_val = ttk.Combobox(root, values=[10,20,50,80,100,125,250,500,1000], width=4)
 baudrate_val.insert(0,'500')
 baudrate_val_prev = int(baudrate_val.get(),16)
 
@@ -226,7 +232,7 @@ def set_tx_settings():
 
 button_tx = Button(frame_tx_btn, text='Tx msg', 
                             height=2, 
-                            font=('Courier New',8), 
+                             
                             width=9, command=set_tx_settings)
 
 
@@ -238,7 +244,7 @@ positionDown = int(root.winfo_screenheight() - windowHeight)
 
 #textbox & scrollbar:
 ybar = Scrollbar(root, width=30)
-textbox = Text(root, width=80, height=root.winfo_screenheight(), font=('Courier New', 8))
+textbox = Text(root, width=80, height=root.winfo_screenheight())
 ybar.config(command=textbox.yview)
 textbox.config(yscrollcommand=ybar.set)
 
@@ -262,7 +268,7 @@ label_can_filter.grid(column=0, row=3)
 #entry_can_mask.pack(side=TOP)
 clear_btn.grid(column=0, row=3)
 
-check_flt0.grid(column=5, row=7)
+'''check_flt0.grid(column=5, row=7)
 check_flt1.grid(column=4, row=7)
 check_flt2.grid(column=3, row=7)
 check_flt3.grid(column=2, row=7)
@@ -272,7 +278,13 @@ check_flt6.grid(column=5, row=6)
 check_flt7.grid(column=4, row=6)
 check_flt8.grid(column=3, row=6)
 check_flt9.grid(column=2, row=6)
-check_flt10.grid(column=1, row=6)
+check_flt10.grid(column=1, row=6)'''
+
+for i in range(30):
+    if i < 11:
+        check_filter_list_new[i].grid(column=11-i, row=7)
+    else:
+        check_filter_list_new[i].grid(column=29-i, row=6)
 
 check_mask0.grid(column=5, row=5)
 check_mask1.grid(column=4, row=5)
