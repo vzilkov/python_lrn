@@ -9,7 +9,7 @@ import logging
                     format='%(asctime)s :: %(levelname)s :: %(message)s')'''
 
 TCP_PORT = 55002
-TCP_IP = '192.168.102.247'
+RASP_IP = '192.168.102.128'
 
 import grpc
 import CanService_pb2
@@ -19,7 +19,7 @@ from google.protobuf import empty_pb2
 import threading
 import sys
 
-channel = grpc.insecure_channel(('%s:%d'%(TCP_IP, 50051)))
+channel = grpc.insecure_channel(('%s:%d'%(RASP_IP, 50051)))
 stub = CanService_pb2_grpc.CanOperationsStub(channel)
 
 import queue
