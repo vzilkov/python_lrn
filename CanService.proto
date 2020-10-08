@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+message CanMessage{
+    int32 Id=1;
+    int32 Len = 2;
+    bytes Data=3;
+}
+
+message testMsg_resp{
+    string resp=1;
+}
+
+
+message testMsg_req{
+    string req=1;
+}
+
+service CanOperations{
+ rpc StartMessagesStream (google.protobuf.Empty) returns (stream CanMessage) {}
+ rpc SayHello(google.protobuf.Empty) returns (testMsg_resp) {}
+ rpc SayHelloAgain(google.protobuf.Empty) returns (testMsg_req) {}
+}
