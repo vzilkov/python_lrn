@@ -1,5 +1,9 @@
-#!/bin/bash
-#lxterminal
-#python3 /Desktop/python/python_lrn/gui_prog.py
-sudo python3 rasp_new_prog.py
-#sudo watch -n 0.1 python3 class_spi_to_can.py
+#!/usr/bin/bash
+sudo apt-get update
+sudo apt-get install python3-pip python3-rpi.gpio python3-spidev python3-grpcio python3-grpc-tools
+#python3 -m pip install --upgrade pip
+#pip3 --version
+
+#git clone -b v1.32.0 https://github.com/grpc/grpc
+
+#sudo apt-get install python3-rpi.gpio python3-spidev python3-grpcio python3-grpc-tools
