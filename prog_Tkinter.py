@@ -60,11 +60,7 @@ entry_can_mask = Entry(frame_mask, text='enter values in hex 0-7FF', textvariabl
 entry_can_mask_string_prev = entry_can_mask_string.get()
 entry_can_mask.grid(row=1, column=0)
 
-#clear button
-def clear_data():
-    print("Clear data")
-    
-clear_btn = Button(frame_rx, text='Reset RX data', command=clear_data)
+clear_btn = Button(frame_rx, text='Reset RX data')#, command=clear_data)
 
 label_id = Label(frame_tx, text='ID (hex):')
 label_len = Label(frame_tx, text='Length:')
@@ -98,13 +94,21 @@ baudrate_val.insert(0,'500')
 baudrate_val_prev = int(baudrate_val.get(), 16)
 
 def set_tx_settings():
-    window = Toplevel(root)
-    window.wm_attributes("-topmost",1)
-    window.title('CAN tx settings')
-    window.geometry("200x200")
-    Label(window, text='can settings label').pack()
-    window.lift(aboveThis=root)
-
+    try:
+        CAN_ID = int(txt_id.get(),16)
+        listbox_length_val = listbox_length.curselection()
+        CAN_LEN = listbox_length_val[0]
+        CAN_data = []
+        for i in range(CAN_LEN):
+            CAN_data.append(int(txt_data[i].get(),16))
+        
+        #send prepared data here, TODO
+        print('CAN TX btn pressed ID %d, Len = %d, Data = '%(CAN_ID, CAN_LEN), CAN_data)
+    except:
+        import tkinter.messagebox
+        print('Unknown data entered in TX send msg')
+        tkinter.messagebox.showwarning('CAN TX data parameters', 'Check ID, Length or Data')
+    
 button_tx = Button(frame_tx_btn, text='Tx msg', 
                             height=2, 
                             width=8, command=set_tx_settings)
@@ -138,7 +142,7 @@ label_can_filter.grid(column=0, row=3)
 
 clear_btn.grid(column=0, row=3)
 
-button_tx.grid(column=0,row=0)
+button_tx.grid(column = 0, row = 0)
 baudrate_val.pack(side=TOP)
 check_ext_id_btn.pack(side=TOP)
 check_listen_all_btn.pack(side=TOP)
@@ -147,20 +151,27 @@ check_listen_all_btn.pack(side=TOP)
 
 import class_can_data
 can_data = class_can_data.can_data()
+
+#clear button
+def clear_data():
+    can_data.clear()
+    print('Data cleared')
+
+clear_btn.config(command=clear_data)
+
 def period():
-    global filter_value_prev, mask_value_prev, check_listen_all_var, check_mode_var_prev
+    global filter_value_prev, mask_value_prev
+    global check_listen_all_var, check_mode_var_prev
     global check_mask_list, check_filter_list
     global check_btn_var_prev, check_btn_var_filter_and_mask
     global checkbutton_var_ext_id, can_data
 
-    
     rcv_can_data = can_data.read_data()
-    print('Rcv can data = ', rcv_can_data)
+    #print('Rcv can data = ', rcv_can_data)
     if rcv_can_data != None:
         #for i in range(len(rcv_can_data)):
         can_data.append_can_buf(hex(rcv_can_data['id']), rcv_can_data['length'], (rcv_can_data['data']))
     
-
     if checkbutton_var_trace.get():
         textbox.delete('0.0', END)
     else:
@@ -190,16 +201,16 @@ def period():
     #check_btn_var_filter_and_mask END
 
 #Listbox start
-    listbox_length_val = listbox_length.curselection()
-    if listbox_length_val:
-        print('Listbox value = ', listbox_length_val[0])
+    #listbox_length_val = listbox_length.curselection()
+    #if listbox_length_val:
+        #print('Listbox value = ', listbox_length_val[0])
 #Listbox END
     #if check_btn_var_light_up.get() is True: #light up button:
 
     #333933 - pc, 329037 - rasp, counts send-rcv data, rcv percentage is 98.5%
     #121192 - pc, 120318 - rasp, counts send-rcv data, rcv percentage is 99.3%
 
-    root.after(100, period)
+    root.after(150, period)
 
 root.after(250, period)
 root.mainloop()
