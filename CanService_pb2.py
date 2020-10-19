@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='CanService.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x10\x43\x61nService.proto\x1a\x1bgoogle/protobuf/empty.proto\"3\n\nCanMessage\x12\n\n\x02Id\x18\x01 \x01(\x05\x12\x0b\n\x03Len\x18\x02 \x01(\x05\x12\x0c\n\x04\x44\x61ta\x18\x03 \x01(\x0c\"\x1c\n\x0ctestMsg_resp\x12\x0c\n\x04resp\x18\x01 \x01(\t\"\x1a\n\x0btestMsg_req\x12\x0b\n\x03req\x18\x01 \x01(\t2\xbd\x01\n\rCanOperations\x12>\n\x13StartMessagesStream\x12\x16.google.protobuf.Empty\x1a\x0b.CanMessage\"\x00\x30\x01\x12\x33\n\x08SayHello\x12\x16.google.protobuf.Empty\x1a\r.testMsg_resp\"\x00\x12\x37\n\rSayHelloAgain\x12\x16.google.protobuf.Empty\x1a\x0c.testMsg_req\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x10\x43\x61nService.proto\x1a\x1bgoogle/protobuf/empty.proto\"3\n\nCanMessage\x12\n\n\x02Id\x18\x01 \x01(\x05\x12\x0b\n\x03Len\x18\x02 \x01(\x05\x12\x0c\n\x04\x44\x61ta\x18\x03 \x01(\x0c\x32\x87\x01\n\rCanOperations\x12>\n\x13StartMessagesStream\x12\x16.google.protobuf.Empty\x1a\x0b.CanMessage\"\x00\x30\x01\x12\x36\n\rTx_to_CAN_bus\x12\x0b.CanMessage\x1a\x16.google.protobuf.Empty\"\x00\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,])
 
@@ -71,71 +71,7 @@ _CANMESSAGE = _descriptor.Descriptor(
   serialized_end=100,
 )
 
-
-_TESTMSG_RESP = _descriptor.Descriptor(
-  name='testMsg_resp',
-  full_name='testMsg_resp',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='resp', full_name='testMsg_resp.resp', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=102,
-  serialized_end=130,
-)
-
-
-_TESTMSG_REQ = _descriptor.Descriptor(
-  name='testMsg_req',
-  full_name='testMsg_req',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='req', full_name='testMsg_req.req', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=132,
-  serialized_end=158,
-)
-
 DESCRIPTOR.message_types_by_name['CanMessage'] = _CANMESSAGE
-DESCRIPTOR.message_types_by_name['testMsg_resp'] = _TESTMSG_RESP
-DESCRIPTOR.message_types_by_name['testMsg_req'] = _TESTMSG_REQ
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 CanMessage = _reflection.GeneratedProtocolMessageType('CanMessage', (_message.Message,), dict(
@@ -145,20 +81,6 @@ CanMessage = _reflection.GeneratedProtocolMessageType('CanMessage', (_message.Me
   ))
 _sym_db.RegisterMessage(CanMessage)
 
-testMsg_resp = _reflection.GeneratedProtocolMessageType('testMsg_resp', (_message.Message,), dict(
-  DESCRIPTOR = _TESTMSG_RESP,
-  __module__ = 'CanService_pb2'
-  # @@protoc_insertion_point(class_scope:testMsg_resp)
-  ))
-_sym_db.RegisterMessage(testMsg_resp)
-
-testMsg_req = _reflection.GeneratedProtocolMessageType('testMsg_req', (_message.Message,), dict(
-  DESCRIPTOR = _TESTMSG_REQ,
-  __module__ = 'CanService_pb2'
-  # @@protoc_insertion_point(class_scope:testMsg_req)
-  ))
-_sym_db.RegisterMessage(testMsg_req)
-
 
 
 _CANOPERATIONS = _descriptor.ServiceDescriptor(
@@ -167,8 +89,8 @@ _CANOPERATIONS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=161,
-  serialized_end=350,
+  serialized_start=103,
+  serialized_end=238,
   methods=[
   _descriptor.MethodDescriptor(
     name='StartMessagesStream',
@@ -180,21 +102,12 @@ _CANOPERATIONS = _descriptor.ServiceDescriptor(
     options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='SayHello',
-    full_name='CanOperations.SayHello',
+    name='Tx_to_CAN_bus',
+    full_name='CanOperations.Tx_to_CAN_bus',
     index=1,
     containing_service=None,
-    input_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-    output_type=_TESTMSG_RESP,
-    options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='SayHelloAgain',
-    full_name='CanOperations.SayHelloAgain',
-    index=2,
-    containing_service=None,
-    input_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-    output_type=_TESTMSG_REQ,
+    input_type=_CANMESSAGE,
+    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
     options=None,
   ),
 ])

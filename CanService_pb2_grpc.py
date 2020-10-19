@@ -20,15 +20,10 @@ class CanOperationsStub(object):
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=CanService__pb2.CanMessage.FromString,
         )
-    self.SayHello = channel.unary_unary(
-        '/CanOperations/SayHello',
-        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-        response_deserializer=CanService__pb2.testMsg_resp.FromString,
-        )
-    self.SayHelloAgain = channel.unary_unary(
-        '/CanOperations/SayHelloAgain',
-        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-        response_deserializer=CanService__pb2.testMsg_req.FromString,
+    self.Tx_to_CAN_bus = channel.unary_unary(
+        '/CanOperations/Tx_to_CAN_bus',
+        request_serializer=CanService__pb2.CanMessage.SerializeToString,
+        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
         )
 
 
@@ -43,14 +38,7 @@ class CanOperationsServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def SayHello(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def SayHelloAgain(self, request, context):
+  def Tx_to_CAN_bus(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -65,15 +53,10 @@ def add_CanOperationsServicer_to_server(servicer, server):
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=CanService__pb2.CanMessage.SerializeToString,
       ),
-      'SayHello': grpc.unary_unary_rpc_method_handler(
-          servicer.SayHello,
-          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-          response_serializer=CanService__pb2.testMsg_resp.SerializeToString,
-      ),
-      'SayHelloAgain': grpc.unary_unary_rpc_method_handler(
-          servicer.SayHelloAgain,
-          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-          response_serializer=CanService__pb2.testMsg_req.SerializeToString,
+      'Tx_to_CAN_bus': grpc.unary_unary_rpc_method_handler(
+          servicer.Tx_to_CAN_bus,
+          request_deserializer=CanService__pb2.CanMessage.FromString,
+          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

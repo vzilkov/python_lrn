@@ -4,14 +4,14 @@ class spi_to_can_brd_exchange:
     GPIO.cleanup()
     def __init__(self, max_speed_khz):
         self.GPIO.setmode(self.GPIO.BCM)
-        self.nCS_pin = 12
+        self.nCS_pin = 8
         self.GPIO.setup(self.nCS_pin, self.GPIO.OUT)
         self.GPIO.output(self.nCS_pin, self.GPIO.HIGH)
         
         import spidev
         self.spi = spidev.SpiDev()
-        self.spi.open(0,0)
-        self.spi.mode=0b00
+        self.spi.open(0,1)
+        self.spi.mode=0b11
         self.spi.lsbfirst=False
         self.spi.max_speed_hz = max_speed_khz*1000
         
@@ -41,7 +41,7 @@ class spi_to_can_brd_exchange:
         #INSTRUCTION_READ = 0x03
         self.spi.writebytes([0x03, adr])
         read_byte = self.spi.readbytes(1)
-        
+        #read_byte = self.spi.xfer([0x03, adr])
         self.cs_high()
         return read_byte[0]
         
@@ -50,7 +50,8 @@ class spi_to_can_brd_exchange:
 
         #INSTRUCTION_WRITE = 0x02
         #buf = [0x02, adr, val]
-        self.spi.writebytes([0x02, adr, val])
+        #self.spi.writebytes([0x02, adr, val])
+        self.spi.xfer2([0x02, adr, val])
 
         self.cs_high()
     

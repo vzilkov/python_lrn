@@ -4,7 +4,7 @@ import class_can_data
 can_data = class_can_data.can_data()
 
 import class_spi_to_can
-mcp2515 = class_spi_to_can.spi_to_can_brd_exchange(6000)
+mcp2515 = class_spi_to_can.spi_to_can_brd_exchange(10)
 mcp2515.set_config_mode()
 mcp2515.set_baudrate(500)
 mcp2515.set_normal_mode()
@@ -56,6 +56,9 @@ class can_service(CanService_pb2_grpc.CanOperationsServicer):
             except:
                 print('Timeout occured (StartMessagesStream)')
     
+    def Tx_to_CAN_bus(self, request, context):
+        print('Tx to CAN bus method')
+
     def SayHello(self, request, context):
         print('Entered to SayHello method')
         return CanService_pb2.testMsg_resp(resp='2')
