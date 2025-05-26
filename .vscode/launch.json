@@ -8,9 +8,10 @@
             "name": "PyGuiLrn",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/pyautogui_lrn/example.py",
+            "program": "${workspaceFolder}/pywinauto_lrn/example.py",
             "console": "integratedTerminal",
-            "python": "${workspaceFolder}/pyautogui_lrn/env/Scripts/python"
+            "python": "${workspaceFolder}/pywinauto_lrn/env/Scripts/python",
+            "cwd": "${workspaceFolder}/pywinauto_lrn",
         }
     ]
 }
