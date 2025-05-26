@@ -9,3 +9,5 @@ vosk
 sounddevice
 numpy
 pyaudio
+
+gpt4all
