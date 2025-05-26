@@ -8,7 +8,7 @@ def delay():
 
 def balena():
     print(gui.size())
-    app = Application(backend="win32").connect(title_re="Mikro*", timeout=3)  # win32 or uid
+    app = Application(backend="uia").connect(title_re="Mikro*", timeout=3)  # win32 or uia
     print("Prog started.")
     autom_id = 66678
     btn_name = "Copy To Clipboard"
