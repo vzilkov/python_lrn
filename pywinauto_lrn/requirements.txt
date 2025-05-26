@@ -3,3 +3,6 @@ pywinauto
 Pillow
 #py_inspect
 PyQt5
+
+vosk
+sounddevice
