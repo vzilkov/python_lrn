@@ -5,11 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Текущий Файл",
+            "name": "PyGuiLrn",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
+            "program": "${workspaceFolder}/pyautogui_lrn/example.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/pyautogui_lrn/env/Scripts/python"
         }
     ]
 }

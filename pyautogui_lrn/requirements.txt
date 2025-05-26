@@ -1,0 +1,5 @@
+pyautogui
+pywinauto  
+Pillow
+#py_inspect
+PyQt5
