@@ -137,3 +137,4 @@ output.txt
 **/.idea/
 **/qtProject
 **/qt_designer
+**/vosk-model*
