@@ -1,39 +1,64 @@
-import os
-import queue
-import sounddevice as sd
-import vosk
-import json
+# import os
+# import queue
+# import sounddevice as sd
+# import vosk
+# import json
 
-# Path to the Russian model
+import pyaudio
+import json
+from vosk import Model, KaldiRecognizer, SetLogLevel
+
+# # Path to the Russian model
+# model_path = "vosk-model-ru-0.22" # big model
 model_path = "vosk-model-small-ru-0.22"
 
+# Отключение логов Vosk для чистого вывода
+SetLogLevel(-1)
 
-# Initialize the model
-if not os.path.exists(model_path):
-    print("Please download the model from https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
-    exit(1)
+# https://alphacephei.com/vosk/models
 
-print(sd.query_devices())
-# exit(1)
+try:
+    model = Model(model_path)
+except Exception as e:
+    print(f"Ошибка при загрузке модели Vosk: {e}")
+    print(f"Убедитесь, что модель скачана и распакована в '{model_path}'")
+    exit()
 
-model = vosk.Model(model_path)
-samplerate = 16000
-q = queue.Queue()
+samplerate = 16000 # Частота дискретизации (стандарт для моделей Vosk)
+recognizer = KaldiRecognizer(model, samplerate)
 
-def callback(indata, frames, time, status):
-    """This is called (from a separate thread) for each audio block."""
-    if status:
-        print(status)
-    q.put(bytes(indata))
+p = pyaudio.PyAudio()
+stream = p.open(format=pyaudio.paInt16,
+                channels=1,
+                rate=samplerate,
+                input=True,
+                frames_per_buffer=512) # Размер буфера, может быть настроен
 
-# Start the audio stream
-device_index=1
-with sd.InputStream(samplerate=samplerate, channels=1, callback=callback, device=device_index):
-    rec = vosk.KaldiRecognizer(model, samplerate)
+print("Tell something (press Ctrl+C to exit)")
+
+try:
+    stream.start_stream()
     while True:
-        data = q.get()
-        if rec.AcceptWaveform(data):
-            result = rec.Result()
-            print(json.loads(result)["text"])
+        data = stream.read(1024, exception_on_overflow=False) # Читаем данные из микрофона
+        if len(data) == 0:
+            break
+        if recognizer.AcceptWaveform(data):
+            result = json.loads(recognizer.Result())
+            if result['text']:
+                print(f"You told: {result['text']}")
         else:
-            print(rec.PartialResult())
+            # Для частичных результатов (пока вы говорите)
+            # partial_result = json.loads(recognizer.PartialResult())
+            # if partial_result['partial']:
+            #     print(f"Partial result: {partial_result['partial']}", end='\r')
+            pass
+
+except KeyboardInterrupt:
+    print("\nStop listening.")
+except Exception as e:
+    print(f"Error occured: {e}")
+finally:
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+    print("Mic closed")

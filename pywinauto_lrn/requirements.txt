@@ -1,3 +1,4 @@
+wheel
 pyautogui
 pywinauto  
 Pillow
@@ -6,3 +7,5 @@ PyQt5
 
 vosk
 sounddevice
+numpy
+pyaudio
